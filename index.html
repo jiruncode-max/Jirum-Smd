@@ -1,72 +1,1408 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tep² &amp; Posting Ulang</title>
-    <!-- Tailwind CSS for styling support -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Playfair Display', serif;
-            background-color: #000000;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Get Coins</title>
 
-        @keyframes blinkEffect {
-            0%, 100% {
-                opacity: 0;
-                transform: scale(0.97);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
+<style>
+*{box-sizing:border-box}
 
-        .blinking-text {
-            /* Jeda hilang-muncul 1 detik */
-            animation: blinkEffect 1s infinite ease-in-out;
-            
-            /* Warna teks bagian dalam */
-            color: #FFE600; 
-            
-            /* Membuat garis pinggir (outline) putih yang solid dan tajam */
-            -webkit-text-stroke: 2px #FFFFFF;
-            text-stroke: 2px #FFFFFF;
-            
-            /* Bayangan lembut di belakang agar teks terlihat lebih tebal dan keluar */
-            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
-                 
-            font-style: italic;
-            font-weight: 900;
-            text-align: center;
-            user-select: none;
-            line-height: 1.2;
-        }
+body{
+    margin:0;
+    background:#f0f2f5;
+    color:#333;
+    font-family:Arial,Roboto,sans-serif;
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+}
 
-        .blinking-text sup {
-            font-size: 0.6em;
-            vertical-align: super;
-            -webkit-text-stroke: 1.5px #FFFFFF;
-            text-stroke: 1.5px #FFFFFF;
-        }
-    </style>
+.container{
+    width:100%;
+    max-width:450px;
+    min-height:100vh;
+    background:#fff;
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+    display:flex;
+    flex-direction:column;
+    position:relative;
+}
+
+header.main-header{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:13px;
+    border-bottom:1px solid #ddd;
+    position:relative;
+    background:#fff;
+}
+
+.main-header h1{
+    margin:0;
+    font-weight:600;
+    font-size:15px;
+    color:#555;
+}
+
+#homeBackBtn{
+    position:absolute;
+    left:10px;
+    background:none;
+    border:0;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.header-menu-wrap{
+    position:absolute;
+    right:12px;
+}
+
+.header-menu-btn{
+    background:none;
+    border:0;
+    font-size:22px;
+    cursor:pointer;
+    padding:4px 8px;
+}
+
+.menu-dropdown{
+    display:none;
+    position:absolute;
+    right:0;
+    top:100%;
+    min-width:160px;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 6px 20px rgba(0,0,0,.12);
+    z-index:200;
+    overflow:hidden;
+}
+
+.menu-dropdown.show{display:block}
+
+.menu-dropdown button{
+    width:100%;
+    border:0;
+    background:#fff;
+    padding:12px 16px;
+    text-align:left;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.menu-dropdown button:hover{background:#f5f5f5}
+
+.content-wrapper{
+    flex:1;
+    overflow-y:auto;
+}
+
+.top-nav{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:22px 15px;
+    border-bottom:1px solid #eee;
+}
+
+.top-nav>img{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    flex-shrink:0;
+}
+
+.top-target-box{
+    flex:1;
+    min-width:0;
+}
+
+.top-target-input-row{
+    position:relative;
+}
+
+.top-target-input-row input{
+    width:100%;
+    height:40px;
+    padding:10px 34px 10px 11px;
+    border:1px solid #e2e2e2;
+    border-radius:9px;
+    outline:none;
+    background:#fafafa;
+    font-size:14px;
+}
+
+.top-target-input-row input:focus{
+    border-color:#fe2c55;
+    background:#fff;
+}
+
+.top-target-spinner{
+    display:none;
+    position:absolute;
+    right:11px;
+    top:12px;
+    width:15px;
+    height:15px;
+    border:2px solid #ddd;
+    border-top-color:#fe2c55;
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+}
+
+.top-target-spinner.show{display:block}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.top-target-status{
+    display:none;
+    margin-top:4px;
+    font-size:10px;
+}
+
+.top-target-status.scanning{
+    color:#fe2c55;
+    font-size:11px;
+    animation:statusPulse .8s ease-in-out infinite;
+}
+
+@keyframes statusPulse{
+    0%,100%{opacity:.4}
+    50%{opacity:1}
+}
+
+.target-card{
+    display:none;
+    margin:0 15px 12px;
+    border:1px solid #eee;
+    border-radius:12px;
+    padding:14px;
+    background:#fafafa;
+}
+
+.target-card.show{display:block}
+
+.target-card-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.target-avatar{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#eee;
+    flex-shrink:0;
+}
+
+.target-info{
+    flex:1;
+    min-width:0;
+}
+
+.target-name{
+    font-size:16px;
+    font-weight:700;
+    color:#000;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.target-username{
+    font-size:12px;
+    font-weight:600;
+    color:#666;
+    margin-top:2px;
+}
+
+.tiktok-verified-badge{
+    display:inline-flex;
+    vertical-align:middle;
+    align-items:center;
+    margin-left:4px;
+}
+
+.tiktok-verified-badge svg{display:block}
+
+.recharge-section{
+    padding:15px;
+}
+
+.recharge-section h2{
+    margin:0;
+    font-size:20px;
+    font-weight:400;
+}
+
+.recharge-section>p{
+    font-size:12px;
+    color:#fe2c55;
+    margin-bottom:15px;
+}
+
+.coin-options{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin-bottom:20px;
+}
+
+.coin-option{
+    height:60px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    background:#f7f7f7;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.coin-option:hover,
+.coin-option.selected{
+    background:#fff;
+    border-color:#ffc107;
+    box-shadow:0 0 5px rgba(255,193,7,.6);
+}
+
+.top-row{
+    display:flex;
+    align-items:center;
+    gap:4px;
+}
+
+.coin-option img{
+    width:24px;
+    height:24px;
+}
+
+.coin-option span{
+    font-size:16px;
+    font-weight:700;
+}
+
+.coin-option p{
+    margin:5px 0 0;
+    font-size:12px;
+    color:#777;
+}
+
+.custom-btn{
+    font-weight:700;
+    font-size:14px;
+}
+
+.card{
+    display:flex;
+    align-items:center;
+    background:#f7f7f7;
+    border-radius:12px;
+    padding:15px;
+    margin-top:15px;
+}
+
+.card img{
+    width:30px;
+    height:30px;
+    margin-right:15px;
+}
+
+.card h4{
+    margin:0;
+    font-size:16px;
+}
+
+.card p{
+    margin:0;
+    font-size:12px;
+    color:#666;
+}
+
+footer{
+    padding:15px;
+    background:#fff;
+    border-top:1px solid #eee;
+    position:sticky;
+    bottom:0;
+    z-index:10;
+}
+
+.special-offer{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    color:#666;
+    margin-bottom:10px;
+}
+
+.buy-button{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:10px;
+    background:#fe2c55;
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.overlay.show{display:flex}
+
+.modal{
+    background:#fff;
+    width:90%;
+    max-width:450px;
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 0 15px rgba(0,0,0,.2);
+}
+
+.modal header{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    padding-bottom:10px;
+    margin-bottom:15px;
+    border-bottom:1px solid #eee;
+}
+
+.modal h2{
+    margin:0;
+    font-size:18px;
+}
+
+.back-btn{
+    position:absolute;
+    left:0;
+    background:none;
+    border:0;
+    font-size:22px;
+    cursor:pointer;
+}
+
+.coin-input-box{
+    display:flex;
+    align-items:center;
+    border:1.5px solid #ddd;
+    border-radius:8px;
+    padding:10px 15px;
+    margin-bottom:6px;
+}
+
+.coin-input-box img{
+    width:24px;
+    height:24px;
+    margin-right:8px;
+}
+
+.coin-input-box input{
+    width:100%;
+    border:0;
+    outline:0;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.coin-hint{
+    font-size:11px;
+    color:#999;
+    margin:0 0 16px;
+}
+
+#usdAmountDisplay{
+    font-size:16px;
+    margin:0 0 20px;
+}
+
+.keypad{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin-bottom:15px;
+}
+
+.keypad button{
+    padding:12px 0;
+    background:#f8f8f8;
+    border:1px solid #e8e8e8;
+    border-radius:6px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.custom-modal-offer,
+.custom-total-row,
+.total-row{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-top:1px solid #eee;
+}
+
+.custom-modal-offer{
+    font-size:13px;
+    color:#666;
+}
+
+.custom-total-row{
+    font-size:16px;
+    font-weight:600;
+}
+
+.recharge-btn,
+.pay-btn,
+.go-back-btn{
+    width:100%;
+    padding:14px;
+    border:0;
+    border-radius:9px;
+    background:#fe2c55;
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.order-details{
+    border-bottom:1px solid #eee;
+    padding-bottom:12px;
+}
+
+.detail-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+    font-size:15px;
+}
+
+.payment-method-section{
+    margin-top:15px;
+}
+
+.payment-method-section h4{
+    margin-bottom:12px;
+}
+
+.payment-option{
+    display:flex;
+    align-items:center;
+    border:1px solid #e9ecef;
+    border-radius:8px;
+    padding:12px 15px;
+    margin-bottom:8px;
+    cursor:pointer;
+    position:relative;
+}
+
+.payment-option.selected{
+    background:#f8f9fa;
+    border-color:#007bff;
+}
+
+.payment-option .pm-icon{
+    margin-right:12px;
+    flex-shrink:0;
+}
+
+.payment-option span{
+    font-size:14px;
+}
+
+.payment-option .dot{
+    display:none;
+}
+
+.payment-option.selected .dot{
+    display:block;
+    position:absolute;
+    right:15px;
+    width:18px;
+    height:18px;
+    background:#007bff;
+    border-radius:50%;
+}
+
+.payment-option.selected .dot:after{
+    content:"";
+    width:8px;
+    height:8px;
+    background:#fff;
+    border-radius:50%;
+    position:absolute;
+    left:5px;
+    top:5px;
+}
+
+.policy-text{
+    font-size:12px;
+    color:#6c757d;
+    text-align:center;
+    line-height:1.5;
+}
+
+.loader-container{
+    background:#fff;
+    width:90%;
+    max-width:400px;
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+}
+
+.tiktok-loader{
+    position:relative;
+    width:100px;
+    height:50px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:0 auto 20px;
+}
+
+.tiktok-loader .dot{
+    position:absolute;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+}
+
+.dot.red{
+    background:#fe2c55;
+    animation:moveRight .7s ease-in-out infinite;
+}
+
+.dot.cyan{
+    background:#00f2ea;
+    animation:moveLeft .7s ease-in-out infinite;
+}
+
+@keyframes moveLeft{
+    0%,100%{transform:translateX(0)}
+    50%{transform:translateX(-25px) scale(.8)}
+}
+
+@keyframes moveRight{
+    0%,100%{transform:translateX(0)}
+    50%{transform:translateX(25px) scale(.8)}
+}
+
+#processingMessage{
+    font-size:16px;
+    color:#555;
+}
+
+#processingSubMessage{
+    font-size:14px;
+    color:#777;
+    margin-top:4px;
+}
+
+#countdownTimer{
+    font-size:18px;
+    font-weight:bold;
+    color:#fe2c55;
+    margin-top:8px;
+}
+
+.success-container{
+    background:#fff;
+    width:90%;
+    max-width:400px;
+    border-radius:12px;
+    padding:25px 20px;
+    text-align:center;
+}
+
+.success-icon{
+    width:64px;
+    height:64px;
+    margin:0 auto 15px;
+    border-radius:50%;
+    background:#22c55e;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:38px;
+    font-weight:800;
+}
+
+.success-container h1{
+    font-size:20px;
+    font-weight:500;
+}
+
+.success-account-card{
+    padding:14px;
+    border:1px solid #eee;
+    border-radius:12px;
+    background:#fafafa;
+    text-align:left;
+    margin-bottom:20px;
+}
+
+.success-account-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.success-account-avatar{
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#eee;
+    flex-shrink:0;
+}
+
+.success-account-info{
+    flex:1;
+    min-width:0;
+}
+
+.success-account-name{
+    font-size:15px;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.success-account-username{
+    font-size:12px;
+    font-weight:600;
+    color:#666;
+    margin-top:2px;
+}
+
+.history-list{
+    max-height:60vh;
+    overflow-y:auto;
+}
+
+.history-empty{
+    text-align:center;
+    color:#aaa;
+    padding:40px 0;
+}
+
+.history-item{
+    background:#fafafa;
+    border:1px solid #eee;
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:10px;
+}
+
+.history-account-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.history-account-top img{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#eee;
+    flex-shrink:0;
+}
+
+.history-account-info{
+    flex:1;
+    min-width:0;
+}
+
+.history-account-name{
+    font-size:14px;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.history-account-username{
+    font-size:12px;
+    font-weight:600;
+    color:#666;
+}
+
+.history-detail-rows{
+    margin-top:10px;
+    border-top:1px solid #eee;
+    padding-top:10px;
+}
+
+.history-detail-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+    font-size:13px;
+}
+
+.history-detail-row:last-child{
+    margin-bottom:0;
+}
+
+.history-detail-label{
+    color:#888;
+    font-weight:600;
+}
+
+.history-detail-value{
+    font-weight:700;
+    color:#222;
+}
+
+.history-coins-inline{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.history-coins-inline img{
+    width:18px;
+    height:18px;
+    flex-shrink:0;
+}
+
+.history-status-green{
+    color:#16a34a;
+    font-weight:700;
+}
+</style>
 </head>
+
 <body>
 
-    <main>
-        <h1 class="blinking-text text-3xl sm:text-4xl md:text-5xl">
-            Tep<sup>2</sup> &amp; Posting Ulang
-        </h1>
-    </main>
+<div class="container" id="mainPage">
+
+<header class="main-header">
+<button id="homeBackBtn">←</button>
+<h1>Get Coins</h1>
+<div class="header-menu-wrap">
+<button class="header-menu-btn" id="menuBtn">☰</button>
+<div class="menu-dropdown" id="menuDropdown">
+<button id="menuRiwayat">Transaction History</button>
+</div>
+</div>
+</header>
+
+<div class="content-wrapper">
+
+<nav class="top-nav">
+<img src="https://static.vecteezy.com/system/resources/previews/020/964/382/original/tiktok-circle-icon-for-web-design-free-png.png">
+<div class="top-target-box">
+<div class="top-target-input-row">
+<input id="targetUsernameInput" placeholder="" autocomplete="off" spellcheck="false">
+<span id="topTargetSpinner" class="top-target-spinner"></span>
+</div>
+<div id="targetStatus" class="top-target-status"></div>
+</div>
+</nav>
+
+<div id="targetCard" class="target-card">
+<div class="target-card-top">
+<img id="targetAvatar" class="target-avatar" alt="Profile photo">
+<div class="target-info">
+<div id="targetName" class="target-name">-</div>
+<div id="targetUsername" class="target-username">-</div>
+</div>
+</div>
+</div>
+
+<div class="recharge-section">
+
+<h2>Isi Ulang</h2>
+<p>Save about 25% thanks to lower third-party service fees.</p>
+
+<div class="coin-options">
+
+<button class="coin-option" data-coins="30" data-price="0.29">
+<div class="top-row">
+<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<span>30</span>
+</div>
+<p>$0.29</p>
+</button>
+
+<button class="coin-option" data-coins="350" data-price="4.99">
+<div class="top-row">
+<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<span>350</span>
+</div>
+<p>$4.99</p>
+</button>
+
+<button class="coin-option" data-coins="700" data-price="9.99">
+<div class="top-row">
+<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<span>700</span>
+</div>
+<p>$9.99</p>
+</button>
+
+<button class="coin-option" data-coins="1400" data-price="19.99">
+<div class="top-row">
+<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<span>1.400</span>
+</div>
+<p>$19.99</p>
+</button>
+
+<button class="coin-option" data-coins="3500" data-price="49.99">
+<div class="top-row">
+<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<span>3.500</span>
+</div>
+<p>$49.99</p>
+</button>
+
+<button class="coin-option" data-coins="7000" data-price="99.99">
+<div class="top-row">
+<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<span>7.000</span>
+</div>
+<p>$99.99</p>
+</button>
+
+<button class="coin-option" data-coins="17500" data-price="249.99">
+<div class="top-row">
+<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<span>17.500</span>
+</div>
+<p>$249.99</p>
+</button>
+
+<button class="coin-option" data-coins="35000" data-price="499.99">
+<div class="top-row">
+<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<span>35.000</span>
+</div>
+<p>$499.99</p>
+</button>
+
+<button class="coin-option custom-btn" id="customBtn">Custom</button>
+
+</div>
+
+<div class="card">
+<img src="https://z-cdn-media.chatglm.cn/files/1cbc49cf-3814-4d40-bcf0-048fe913535a.png?auth_key=1888344054-97f7da644cba4924814aaf6121462058-0-6fda58532b32a9f84111ab25bc4e39da" width="150" height="150" alt="Handshake">
+<div>
+<h4>Invite and Earn Rewards</h4>
+<p>Check out this new feature !!</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<footer>
+<div class="special-offer">
+<span>Special offer</span>
+<span>Get 5% cashback &gt;</span>
+</div>
+<button class="buy-button" id="buyButton">Buy $0.29</button>
+</footer>
+
+</div>
+
+<!-- CUSTOM -->
+<div class="overlay" id="customModal">
+<div class="modal">
+<header>
+<button class="back-btn" id="modalBackBtn">←</button>
+<h2>Custom</h2>
+</header>
+<div class="coin-input-box">
+<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<input id="coinAmountInput" value="0" readonly>
+</div>
+<p class="coin-hint">30 – 2.500.000</p>
+<p id="usdAmountDisplay">$0.00</p>
+<div class="keypad" id="keypad">
+<button>1</button><button>2</button><button>3</button><button>⌫</button>
+<button>4</button><button>5</button><button>6</button><button>000</button>
+<button>7</button><button>8</button><button>9</button><button>0</button>
+</div>
+<div class="custom-modal-offer">
+<span>Special offer</span>
+<span>Get 5% cashback &gt;</span>
+</div>
+<div class="custom-total-row">
+<span>Total</span>
+<span id="customTotalAmount">$0.00</span>
+</div>
+<button class="recharge-btn" id="rechargeBtn">Recharge</button>
+</div>
+</div>
+
+<!-- ORDER -->
+<div class="overlay" id="orderModal">
+<div class="modal">
+<header>
+<button class="back-btn" id="summaryBackBtn">←</button>
+<h2>Order Coins</h2>
+</header>
+<div class="order-details">
+<div class="detail-row">
+<span>Account</span>
+<span id="accountName"></span>
+</div>
+<div class="detail-row">
+<span id="summaryCoins"></span>
+<span id="summaryPrice"></span>
+</div>
+</div>
+<div class="payment-method-section">
+<h4>Payment</h4>
+<div class="payment-option selected" data-method="Visa">
+<img class="pm-icon" src="https://img.icons8.com/color/48/000000/visa.png" width="40" height="26" style="object-fit:contain;border-radius:4px;">
+<span>Visa</span>
+<div class="dot"></div>
+</div>
+<div class="payment-option" data-method="Paypal">
+<img class="pm-icon" src="https://img.icons8.com/color/48/000000/paypal.png" width="40" height="26" style="object-fit:contain;border-radius:4px;">
+<span>PayPal</span>
+<div class="dot"></div>
+</div>
+<p class="policy-text"></p>
+</div>
+<div class="total-row">
+<span>Total</span>
+<span id="summaryTotal"></span>
+</div>
+<button class="pay-btn" id="payNowBtn">Continue Payment</button>
+</div>
+</div>
+
+<!-- LOADER -->
+<div class="overlay" id="loaderModal">
+<div class="loader-container">
+<div class="tiktok-loader">
+<div class="dot red"></div>
+<div class="dot cyan"></div>
+</div>
+<p id="processingMessage">Processing payment...</p>
+<p id="processingSubMessage">Please wait.</p>
+<p id="countdownTimer">00:03</p>
+</div>
+</div>
+
+<!-- SUCCESS -->
+<div class="overlay" id="successModal">
+<div class="success-container">
+<div class="success-icon">✓</div>
+<h1>Payment Successful</h1>
+<div class="success-account-card">
+<div class="success-account-head">
+<img id="successAvatar" class="success-account-avatar">
+<div class="success-account-info">
+<div id="successAccountName" class="success-account-name">Guest</div>
+<div id="successAccountUsername" class="success-account-username">@guest</div>
+</div>
+</div>
+</div>
+<button class="go-back-btn" id="goBackBtn">NEXT</button>
+</div>
+</div>
+
+<!-- HISTORY -->
+<div class="overlay" id="historyModal">
+<div class="modal">
+<header>
+<button class="back-btn" id="historyBackBtn">←</button>
+<h2>Transaction History</h2>
+</header>
+<div class="history-list" id="historyList">
+<div class="history-empty">There are no transactions yet.</div>
+</div>
+</div>
+</div>
+
+<script>
+const input=document.getElementById("targetUsernameInput");
+const spinner=document.getElementById("topTargetSpinner");
+const statusBox=document.getElementById("targetStatus");
+const card=document.getElementById("targetCard");
+
+let detectedTarget=null;
+let targetTimer=null;
+let scanInterval=null;
+let requestId=0;
+const cache={};
+const coinsBalance={};
+
+function formatUSD(v){return "$"+Number(v).toFixed(2)}
+
+function fmtCoins(v){
+    return Number(v||0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".")
+}
+
+function pick(obj,keys,fb){
+    for(const k of keys){
+        let v=obj;
+        for(const p of k.split(".")) v=v?.[p];
+        if(v!==undefined&&v!==null&&v!=="") return v;
+    }
+    return fb;
+}
+
+function badgeSVG(s){
+    return '<span class="tiktok-verified-badge"><svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#20D5EC"/><path d="M7.5 12.2l3 3 6-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+}
+
+function hashStr(s){
+    let h=0;
+    for(let i=0;i<s.length;i++){
+        h=((h<<5)-h)+s.charCodeAt(i);
+        h|=0;
+    }
+    return Math.abs(h);
+}
+
+function seededRandom(seed){
+    let x=Math.sin(seed)*10000;
+    return x-Math.floor(x);
+}
+
+function generateDemoCoins(username){
+    const h=hashStr(username);
+    const r=seededRandom(h);
+    const tier=h%100;
+    if(tier<55) return 0;
+    let min,max;
+    if(tier<73){min=30;max=99;}
+    else if(tier<86){min=100;max=349;}
+    else if(tier<94){min=350;max=699;}
+    else if(tier<98){min=700;max=1399;}
+    else if(tier<99){min=1400;max=3499;}
+    else{min=3500;max=9999;}
+    const raw=min+Math.floor(r*(max-min+1));
+    return Math.round(raw/10)*10;
+}
+
+function extractUser(raw){
+    if(!raw||typeof raw!=="object") throw new Error("API response empty");
+    if(raw.code!==undefined && Number(raw.code)!==0) throw new Error(raw.msg||"API error");
+    const root=raw.data||raw;
+    const info=root.userInfo||root.user_info||{};
+    const user=info.user||root.user||info||root;
+    const username=String(pick(user,["uniqueId","unique_id","username"],"")).replace(/^@/,"").trim();
+    if(!username) throw new Error("Username not found");
+    return {
+        username,
+        name:String(pick(user,["nickname","name","display_name"],username)),
+        avatar:String(pick(user,["avatarLarger","avatarMedium","avatarThumb","avatar","avatar_url"],"")),
+        verified:Boolean(pick(user,["verified","isVerified","is_verified"],false))
+    };
+}
+
+async function requestTikwmUser(username){
+    const res=await fetch("https://www.tikwm.com/api/user/info/",{
+        method:"POST",cache:"no-store",
+        headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8","Accept":"application/json"},
+        body:"unique_id="+encodeURIComponent(username)
+    });
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const txt=await res.text();
+    let json;try{json=JSON.parse(txt)}catch{throw new Error("API response is not JSON")}
+    return extractUser(json);
+}
+
+function normalize(v){
+    let s=String(v||"").trim();
+    s=s.replace(/^https?:\/\/(?:www\.|m\.)?tiktok\.com\//i,"");
+    s=s.replace(/^@/,"");
+    return s.split(/[/?#]/)[0].trim();
+}
+
+function stopScanText(){
+    if(scanInterval){clearInterval(scanInterval);scanInterval=null}
+    statusBox.classList.remove("scanning");
+}
+
+function renderTarget(data){
+    detectedTarget=data;
+    stopScanText();
+    const av=document.getElementById("targetAvatar");
+    av.src=data.avatar||"";
+    av.onerror=()=>{av.removeAttribute("src")};
+    document.getElementById("targetName").innerHTML=(data.name||data.username)+(data.verified?badgeSVG(16):"");
+    document.getElementById("targetUsername").textContent="@"+data.username;
+    if(coinsBalance[data.username]===undefined){
+        coinsBalance[data.username]=generateDemoCoins(data.username);
+    }
+    card.classList.add("show");
+    statusBox.style.display="none";
+    spinner.classList.remove("show");
+}
+
+function resetTarget(){
+    detectedTarget=null;
+    input.value="";
+    card.classList.remove("show");
+    stopScanText();
+    statusBox.textContent="";
+    statusBox.style.display="none";
+    spinner.classList.remove("show");
+    document.getElementById("targetName").textContent="-";
+    document.getElementById("targetUsername").textContent="-";
+}
+
+async function fetchTarget(username){
+    const id=++requestId;
+    if(cache[username]){renderTarget(cache[username]);return}
+
+    const scanSteps=[""];
+    let stepIdx=0;
+    statusBox.classList.add("scanning");
+    statusBox.textContent=scanSteps[0];
+    statusBox.style.display="block";
+
+    scanInterval=setInterval(()=>{
+        stepIdx++;
+        if(stepIdx<scanSteps.length){
+            statusBox.textContent=scanSteps[stepIdx];
+        }
+    },300);
+
+    try{
+        const data=await requestTikwmUser(username);
+        if(id!==requestId){stopScanText();return}
+        cache[username]=data;
+        renderTarget(data);
+    }catch(e){
+        if(id!==requestId){stopScanText();return}
+        stopScanText();
+        spinner.classList.remove("show");
+        card.classList.remove("show");
+        statusBox.textContent=e.message||"Failed to fetch account data";
+        statusBox.style.color="#d93025";
+        statusBox.style.display="block";
+    }
+}
+
+function detectTarget(){
+    const un=normalize(input.value);
+    if(!un){resetTarget();return}
+    clearTimeout(targetTimer);
+    spinner.classList.add("show");
+    statusBox.textContent="";
+    statusBox.style.color="#888";
+    statusBox.style.display="block";
+    card.classList.remove("show");
+    stopScanText();
+    targetTimer=setTimeout(()=>{fetchTarget(un)},500);
+}
+
+input.addEventListener("input",detectTarget);
+input.addEventListener("paste",()=>{setTimeout(detectTarget,50)});
+
+/* COINS */
+const coinOpts=document.querySelectorAll(".coin-option:not(.custom-btn)");
+let selCoins=30,selPrice=0.29;
+document.querySelector('.coin-option[data-coins="30"]').classList.add("selected");
+
+function setBuyText(){document.getElementById("buyButton").textContent="Buy "+formatUSD(selPrice)}
+
+coinOpts.forEach(o=>{
+    o.addEventListener("click",()=>{
+        coinOpts.forEach(x=>x.classList.remove("selected"));
+        o.classList.add("selected");
+        selCoins=Number(o.dataset.coins);
+        selPrice=Number(o.dataset.price);
+        setBuyText();
+    });
+});
+
+/* CUSTOM */
+const coinInput=document.getElementById("coinAmountInput");
+const usdDisp=document.getElementById("usdAmountDisplay");
+const totDisp=document.getElementById("customTotalAmount");
+let customRaw="";
+
+function fmtNum(v){return v?fmtCoins(v):"0"}
+
+function clampCustom(){
+    let n=Number(customRaw)||0;
+    if(n>2500000) customRaw="2500000";
+    coinInput.value=fmtNum(customRaw);
+    const c=Number(customRaw)||0;
+    const u=c*0.01426;
+    usdDisp.textContent=formatUSD(u);
+    totDisp.textContent=formatUSD(u);
+}
+
+document.getElementById("customBtn").addEventListener("click",()=>{
+    customRaw="";coinInput.value="0";usdDisp.textContent="$0.00";totDisp.textContent="$0.00";
+    document.getElementById("customModal").classList.add("show");
+});
+document.getElementById("modalBackBtn").addEventListener("click",()=>{document.getElementById("customModal").classList.remove("show")});
+
+document.getElementById("keypad").addEventListener("click",e=>{
+    const b=e.target.closest("button");if(!b) return;
+    const v=b.textContent.trim();
+    if(v==="⌫") customRaw=customRaw.slice(0,-1);
+    else if(v==="000"){if(customRaw.length>0) customRaw+="000"}
+    else if(/^\d$/.test(v)){if(customRaw.length<9) customRaw+=v}
+    clampCustom();
+});
+
+document.getElementById("rechargeBtn").addEventListener("click",()=>{
+    const c=Number(customRaw)||0;
+    if(c<30){alert("Minimum coins is 30.");return}
+    if(c>2500000){alert("Maximum coins is 2.500.000.");return}
+    selCoins=c;selPrice=Math.round(c*0.01426*100)/100;
+    coinOpts.forEach(o=>o.classList.remove("selected"));setBuyText();
+    document.getElementById("customModal").classList.remove("show");
+});
+
+/* ORDER */
+const orderModal=document.getElementById("orderModal");
+document.getElementById("buyButton").addEventListener("click",()=>{
+    if(!detectedTarget){alert("Masukkan username target terlebih dahulu!");return}
+    document.getElementById("accountName").textContent="@"+detectedTarget.username;
+    document.getElementById("summaryCoins").textContent=fmtCoins(selCoins)+" Coins";
+    document.getElementById("summaryPrice").textContent=formatUSD(selPrice);
+    document.getElementById("summaryTotal").textContent=formatUSD(selPrice);
+    orderModal.classList.add("show");
+});
+document.getElementById("summaryBackBtn").addEventListener("click",()=>{orderModal.classList.remove("show")});
+
+document.querySelectorAll(".payment-option").forEach(o=>{
+    o.addEventListener("click",()=>{
+        document.querySelectorAll(".payment-option").forEach(x=>x.classList.remove("selected"));
+        o.classList.add("selected");
+    });
+});
+
+/* PAYMENT — loading 3 detik */
+document.getElementById("payNowBtn").addEventListener("click",()=>{
+    orderModal.classList.remove("show");
+    document.getElementById("loaderModal").classList.add("show");
+
+    let seconds=3;
+    document.getElementById("countdownTimer").textContent="00:0"+seconds;
+    document.getElementById("processingMessage").textContent="Processing payment...";
+    document.getElementById("processingSubMessage").textContent="";
+
+    const timer=setInterval(()=>{
+        seconds--;
+        document.getElementById("countdownTimer").textContent="00:0"+seconds;
+
+        if(seconds<=0){
+            clearInterval(timer);
+            document.getElementById("loaderModal").classList.remove("show");
+            showPaymentSuccess();
+        }
+    },1000);
+});
+
+function showPaymentSuccess(){
+    if(!detectedTarget) return;
+
+    document.getElementById("successAvatar").src=detectedTarget.avatar||"";
+    document.getElementById("successAccountName").innerHTML=
+        (detectedTarget.name||detectedTarget.username)+(detectedTarget.verified?badgeSVG(15):"");
+    document.getElementById("successAccountUsername").textContent="@"+detectedTarget.username;
+
+    const un=detectedTarget.username;
+    coinsBalance[un]=(coinsBalance[un]||0)+selCoins;
+
+    transactionHistory.unshift({
+        username:detectedTarget.username,
+        name:detectedTarget.name,
+        avatar:detectedTarget.avatar,
+        verified:detectedTarget.verified,
+        coins:coinsBalance[un],
+        price:selPrice
+    });
+    if(transactionHistory.length>50) transactionHistory.pop();
+
+    document.getElementById("successModal").classList.add("show");
+}
+
+document.getElementById("goBackBtn").addEventListener("click",()=>{
+    document.getElementById("successModal").classList.remove("show");
+    resetTarget();
+});
+
+/* HISTORY */
+let transactionHistory=[];
+
+const coinImg="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a";
+
+function openHistory(){
+    const list=document.getElementById("historyList");
+    list.innerHTML="";
+    if(!transactionHistory.length){
+        list.innerHTML='<div class="history-empty">There are no transactions yet.</div>';
+    }else{
+        transactionHistory.forEach(tx=>{
+            const d=document.createElement("div");d.className="history-item";
+            d.innerHTML=`
+            <div class="history-account-top">
+                <img src="${tx.avatar||""}">
+                <div class="history-account-info">
+                    <div class="history-account-name">
+                        ${tx.name||tx.username}${tx.verified?badgeSVG(14):""}
+                    </div>
+                    <div class="history-account-username">@${tx.username}</div>
+                </div>
+            </div>
+            <div class="history-detail-rows">
+                <div class="history-detail-row">
+                    <span class="history-detail-label">Coins</span>
+                    <span class="history-detail-value">
+                        <span class="history-coins-inline"><img src="${coinImg}"> ${fmtCoins(tx.coins)}</span>
+                    </span>
+                </div>
+                <div class="history-detail-row">
+                    <span class="history-detail-label">Harga</span>
+                    <span class="history-detail-value">${formatUSD(tx.price)}</span>
+                </div>
+                <div class="history-detail-row">
+                    <span class="history-detail-label">Status</span>
+                    <span class="history-status-green">Sukses</span>
+                </div>
+            </div>`;
+            list.appendChild(d);
+        });
+    }
+    document.getElementById("historyModal").classList.add("show");
+}
+
+document.getElementById("menuBtn").addEventListener("click",e=>{e.stopPropagation();document.getElementById("menuDropdown").classList.toggle("show")});
+document.addEventListener("click",()=>{document.getElementById("menuDropdown").classList.remove("show")});
+document.getElementById("menuRiwayat").addEventListener("click",openHistory);
+document.getElementById("historyBackBtn").addEventListener("click",()=>{document.getElementById("historyModal").classList.remove("show")});
+document.getElementById("homeBackBtn").addEventListener("click",resetTarget);
+
+setBuyText();
+</script>
 
 </body>
 </html>
