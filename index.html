@@ -10,91 +10,31 @@
 
 body{
     margin:0;
-    background:#f0f2f5;
+    background:linear-gradient(160deg,#e8ebf2 0%,#f0f2f5 45%,#e6e9f0 100%);
     color:#333;
     font-family:Arial,Roboto,sans-serif;
     display:flex;
     justify-content:center;
     min-height:100vh;
+    padding:18px 12px;
 }
 
+/* ===== KONTAINER MELAYANG, TERPUSAT DI TENGAH LAYAR ===== */
 .container{
+    margin:auto;
     width:100%;
     max-width:450px;
-    min-height:100vh;
     background:#fff;
-    box-shadow:0 0 10px rgba(0,0,0,.1);
+    border-radius:22px;
+    box-shadow:
+        0 20px 45px rgba(30,35,60,.18),
+        0 8px 18px rgba(30,35,60,.10),
+        0 0 0 1px rgba(255,255,255,.6) inset;
     display:flex;
     flex-direction:column;
     position:relative;
-}
-
-header.main-header{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:13px;
-    border-bottom:1px solid #ddd;
-    position:relative;
-    background:#fff;
-}
-
-.main-header h1{
-    margin:0;
-    font-weight:600;
-    font-size:15px;
-    color:#555;
-}
-
-#homeBackBtn{
-    position:absolute;
-    left:10px;
-    background:none;
-    border:0;
-    font-size:20px;
-    cursor:pointer;
-}
-
-.header-menu-wrap{
-    position:absolute;
-    right:12px;
-}
-
-.header-menu-btn{
-    background:none;
-    border:0;
-    font-size:22px;
-    cursor:pointer;
-    padding:4px 8px;
-}
-
-.menu-dropdown{
-    display:none;
-    position:absolute;
-    right:0;
-    top:100%;
-    min-width:160px;
-    background:#fff;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 6px 20px rgba(0,0,0,.12);
-    z-index:200;
     overflow:hidden;
 }
-
-.menu-dropdown.show{display:block}
-
-.menu-dropdown button{
-    width:100%;
-    border:0;
-    background:#fff;
-    padding:12px 16px;
-    text-align:left;
-    cursor:pointer;
-    font-size:14px;
-}
-
-.menu-dropdown button:hover{background:#f5f5f5}
 
 .content-wrapper{
     flex:1;
@@ -175,10 +115,11 @@ header.main-header{
     50%{opacity:1}
 }
 
+/* ===== KARTU TARGET ===== */
 .target-card{
     display:none;
-    margin:0 15px 12px;
-    border:1px solid #eee;
+    margin:12px 15px 12px;
+    border:1px solid #e2e2e2;
     border-radius:12px;
     padding:14px;
     background:#fafafa;
@@ -193,12 +134,13 @@ header.main-header{
 }
 
 .target-avatar{
-    width:56px;
-    height:56px;
+    width:48px;
+    height:48px;
     border-radius:50%;
     object-fit:cover;
     background:#eee;
     flex-shrink:0;
+    display:block;
 }
 
 .target-info{
@@ -215,13 +157,6 @@ header.main-header{
     text-overflow:ellipsis;
 }
 
-.target-username{
-    font-size:12px;
-    font-weight:600;
-    color:#666;
-    margin-top:2px;
-}
-
 .tiktok-verified-badge{
     display:inline-flex;
     vertical-align:middle;
@@ -232,7 +167,7 @@ header.main-header{
 .tiktok-verified-badge svg{display:block}
 
 .recharge-section{
-    padding:15px;
+    padding:15px 15px 8px;
 }
 
 .recharge-section h2{
@@ -306,7 +241,7 @@ header.main-header{
     background:#f7f7f7;
     border-radius:12px;
     padding:15px;
-    margin-top:15px;
+    margin:15px 0 0;
 }
 
 .card img{
@@ -326,8 +261,9 @@ header.main-header{
     color:#666;
 }
 
+/* jarak kartu Invite ↔ PROCESS: titik tengah (~20px) */
 footer{
-    padding:15px;
+    padding:12px 15px 15px;
     background:#fff;
     border-top:1px solid #eee;
     position:sticky;
@@ -518,11 +454,6 @@ footer{
     border-color:#007bff;
 }
 
-.payment-option .pm-icon{
-    margin-right:12px;
-    flex-shrink:0;
-}
-
 .payment-option span{
     font-size:14px;
 }
@@ -688,13 +619,6 @@ footer{
     text-overflow:ellipsis;
 }
 
-.success-account-username{
-    font-size:12px;
-    font-weight:600;
-    color:#666;
-    margin-top:2px;
-}
-
 .history-list{
     max-height:60vh;
     overflow-y:auto;
@@ -740,12 +664,6 @@ footer{
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-}
-
-.history-account-username{
-    font-size:12px;
-    font-weight:600;
-    color:#666;
 }
 
 .history-detail-rows{
@@ -799,17 +717,6 @@ footer{
 
 <div class="container" id="mainPage">
 
-<header class="main-header">
-<button id="homeBackBtn">←</button>
-<h1>Get Coins</h1>
-<div class="header-menu-wrap">
-<button class="header-menu-btn" id="menuBtn">☰</button>
-<div class="menu-dropdown" id="menuDropdown">
-<button id="menuRiwayat">Transaction History</button>
-</div>
-</div>
-</header>
-
 <div class="content-wrapper">
 
 <nav class="top-nav">
@@ -828,21 +735,20 @@ footer{
 <img id="targetAvatar" class="target-avatar" alt="Profile photo">
 <div class="target-info">
 <div id="targetName" class="target-name">-</div>
-<div id="targetUsername" class="target-username">-</div>
 </div>
 </div>
 </div>
 
 <div class="recharge-section">
 
-<h2>Isi Ulang</h2>
+<h2>SELECT OPTION</h2>
 <p>Save about 25% thanks to lower third-party service fees.</p>
 
 <div class="coin-options">
 
 <button class="coin-option" data-coins="30" data-price="0.29">
 <div class="top-row">
-<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<img class="coin-icon" alt="Coin">
 <span>30</span>
 </div>
 <p>$0.29</p>
@@ -850,7 +756,7 @@ footer{
 
 <button class="coin-option" data-coins="350" data-price="4.99">
 <div class="top-row">
-<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<img class="coin-icon" alt="Coin">
 <span>350</span>
 </div>
 <p>$4.99</p>
@@ -858,7 +764,7 @@ footer{
 
 <button class="coin-option" data-coins="700" data-price="9.99">
 <div class="top-row">
-<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<img class="coin-icon" alt="Coin">
 <span>700</span>
 </div>
 <p>$9.99</p>
@@ -866,7 +772,7 @@ footer{
 
 <button class="coin-option" data-coins="1400" data-price="19.99">
 <div class="top-row">
-<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<img class="coin-icon" alt="Coin">
 <span>1.400</span>
 </div>
 <p>$19.99</p>
@@ -874,7 +780,7 @@ footer{
 
 <button class="coin-option" data-coins="3500" data-price="49.99">
 <div class="top-row">
-<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<img class="coin-icon" alt="Coin">
 <span>3.500</span>
 </div>
 <p>$49.99</p>
@@ -882,7 +788,7 @@ footer{
 
 <button class="coin-option" data-coins="7000" data-price="99.99">
 <div class="top-row">
-<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<img class="coin-icon" alt="Coin">
 <span>7.000</span>
 </div>
 <p>$99.99</p>
@@ -890,18 +796,10 @@ footer{
 
 <button class="coin-option" data-coins="17500" data-price="249.99">
 <div class="top-row">
-<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<img class="coin-icon" alt="Coin">
 <span>17.500</span>
 </div>
 <p>$249.99</p>
-</button>
-
-<button class="coin-option" data-coins="35000" data-price="499.99">
-<div class="top-row">
-<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
-<span>35.000</span>
-</div>
-<p>$499.99</p>
 </button>
 
 <button class="coin-option custom-btn" id="customBtn">Custom</button>
@@ -911,7 +809,7 @@ footer{
 <div class="card">
 <img src="https://z-cdn-media.chatglm.cn/files/1cbc49cf-3814-4d40-bcf0-048fe913535a.png?auth_key=1888344054-97f7da644cba4924814aaf6121462058-0-6fda58532b32a9f84111ab25bc4e39da" width="150" height="150" alt="Handshake">
 <div>
-<h4>Invite and Earn Rewards</h4>
+<h4>Invite and Earn Friends</h4>
 <p>Check out this new feature !!</p>
 </div>
 </div>
@@ -924,7 +822,7 @@ footer{
 <span>Special offer</span>
 <span>Get 5% cashback &gt;</span>
 </div>
-<button class="buy-button" id="buyButton">Buy $0.29</button>
+<button class="buy-button" id="buyButton">PROCESS</button>
 </footer>
 
 </div>
@@ -937,7 +835,7 @@ footer{
 <h2>Custom</h2>
 </header>
 <div class="coin-input-box">
-<img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a">
+<img class="coin-icon" alt="Coin">
 <input id="coinAmountInput" value="0" readonly>
 </div>
 <p class="coin-hint">30 – 2.500.000</p>
@@ -955,7 +853,7 @@ footer{
 <span>Total</span>
 <span id="customTotalAmount">$0.00</span>
 </div>
-<button class="recharge-btn" id="rechargeBtn">Recharge</button>
+<button class="recharge-btn" id="rechargeBtn">PROCESS</button>
 </div>
 </div>
 
@@ -964,7 +862,7 @@ footer{
 <div class="modal">
 <header>
 <button class="back-btn" id="summaryBackBtn">←</button>
-<h2>Order Coins</h2>
+<h2>Order</h2>
 </header>
 <div class="order-details">
 <div class="detail-row">
@@ -977,14 +875,12 @@ footer{
 </div>
 </div>
 <div class="payment-method-section">
-<h4>Payment</h4>
+<h4>Option</h4>
 <div class="payment-option selected" data-method="Visa">
-<img class="pm-icon" src="https://img.icons8.com/color/48/000000/visa.png" width="40" height="26" style="object-fit:contain;border-radius:4px;">
 <span>Visa</span>
 <div class="dot"></div>
 </div>
 <div class="payment-option" data-method="Paypal">
-<img class="pm-icon" src="https://img.icons8.com/color/48/000000/paypal.png" width="40" height="26" style="object-fit:contain;border-radius:4px;">
 <span>PayPal</span>
 <div class="dot"></div>
 </div>
@@ -994,7 +890,7 @@ footer{
 <span>Total</span>
 <span id="summaryTotal"></span>
 </div>
-<button class="pay-btn" id="payNowBtn">Continue Payment</button>
+<button class="pay-btn" id="payNowBtn">PROCESS</button>
 </div>
 </div>
 
@@ -1005,7 +901,7 @@ footer{
 <div class="dot red"></div>
 <div class="dot cyan"></div>
 </div>
-<p id="processingMessage">Processing payment...</p>
+<p id="processingMessage">Process...</p>
 <p id="processingSubMessage">Please wait.</p>
 <p id="countdownTimer">00:03</p>
 </div>
@@ -1015,38 +911,83 @@ footer{
 <div class="overlay" id="successModal">
 <div class="success-container">
 <div class="success-icon">✓</div>
-<h1>Payment Successful</h1>
+<h1>Successful</h1>
 <div class="success-account-card">
 <div class="success-account-head">
 <img id="successAvatar" class="success-account-avatar">
 <div class="success-account-info">
 <div id="successAccountName" class="success-account-name">Guest</div>
-<div id="successAccountUsername" class="success-account-username">@guest</div>
 </div>
 </div>
 </div>
-<button class="go-back-btn" id="goBackBtn">NEXT</button>
-</div>
-</div>
-
-<!-- HISTORY -->
-<div class="overlay" id="historyModal">
-<div class="modal">
-<header>
-<button class="back-btn" id="historyBackBtn">←</button>
-<h2>Transaction History</h2>
-</header>
-<div class="history-list" id="historyList">
-<div class="history-empty">There are no transactions yet.</div>
-</div>
+<button class="go-back-btn" id="goBackBtn">DONE</button>
 </div>
 </div>
 
 <script>
+/* ===== KONFIG API DETEKSI — fetchlayer.dev ===== */
+const FL_CONFIG={
+    apiKey:"",
+    keyHeader:"x-api-key",
+    keyPrefix:"",
+    endpoints:[
+        "https://api.fetchlayer.dev/tiktok/user-profile?username={u}",
+        "https://api.fetchlayer.dev/v1/tiktok/user-profile?username={u}",
+        "https://api.fetchlayer.dev/api/tiktok/user-profile?username={u}"
+    ],
+    fallbackTikwm:true
+};
+
+/* ===== IKON KOIN TIKTOK (SVG tertanam) ===== */
+const TIKTOK_COIN_SVG=
+'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 200">'+
+'<defs>'+
+'<linearGradient id="ringG" x1="0" y1="0" x2="1" y2="1">'+
+'<stop offset="0" stop-color="#ffe9a8"/><stop offset=".45" stop-color="#f5c542"/><stop offset="1" stop-color="#c98a12"/>'+
+'</linearGradient>'+
+'<linearGradient id="faceG" x1="0" y1="0" x2="1" y2="1">'+
+'<stop offset="0" stop-color="#04222e"/><stop offset=".5" stop-color="#0a1626"/><stop offset="1" stop-color="#26081c"/>'+
+'</linearGradient>'+
+'<path id="note" d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>'+
+'<path id="spark4" d="M0-7L1.8-1.8 7 0 1.8 1.8 0 7-1.8 1.8-7 0-1.8-1.8Z"/>'+
+'</defs>'+
+'<circle cx="100" cy="100" r="100" fill="#a97b10"/>'+
+'<circle cx="100" cy="100" r="96.5" fill="none" stroke="#8a6207" stroke-width="5" stroke-dasharray="4.2 4.2"/>'+
+'<circle cx="100" cy="100" r="88" fill="url(#ringG)"/>'+
+'<path d="M26 66 A78 78 0 0 1 68 27" stroke="#fff" stroke-opacity=".6" stroke-width="7" fill="none" stroke-linecap="round"/>'+
+'<circle cx="100" cy="100" r="75" fill="url(#faceG)"/>'+
+'<path d="M62 48 A62 62 0 0 0 45 108" stroke="#2ee9ff" stroke-width="6.5" fill="none" stroke-linecap="round" opacity=".95"/>'+
+'<path d="M156 96 A58 58 0 0 1 128 146" stroke="#ff2f92" stroke-width="6.5" fill="none" stroke-linecap="round" opacity=".95"/>'+
+'<circle cx="100" cy="100" r="75" fill="none" stroke="#0ff" stroke-opacity=".12" stroke-width="10"/>'+
+'<use xlink:href="#spark4" href="#spark4" fill="#3de9ff" transform="translate(52,72) scale(1.5)"/>'+
+'<use xlink:href="#spark4" href="#spark4" fill="#ff2f92" transform="translate(150,84) scale(1.3)"/>'+
+'<g transform="translate(38,34) scale(5.1)">'+
+'<use xlink:href="#note" href="#note" fill="#19e3f7" x="-1.6" y="1.4"/>'+
+'<use xlink:href="#note" href="#note" fill="#ff2f92" x="1.6" y="-1.2"/>'+
+'<use xlink:href="#note" href="#note" fill="#ffffff"/>'+
+'</g>'+
+'<g>'+
+'<ellipse cx="143" cy="152" rx="21" ry="9" fill="#b57e0d"/>'+
+'<ellipse cx="143" cy="148" rx="21" ry="9" fill="#f7c93e"/>'+
+'<ellipse cx="141" cy="144" rx="21" ry="9" fill="#b57e0d"/>'+
+'<circle cx="138" cy="138" r="21" fill="url(#ringG)"/>'+
+'<circle cx="138" cy="138" r="16.5" fill="none" stroke="#a97b10" stroke-width="1.6"/>'+
+'<g transform="translate(128,128) scale(1.75)">'+
+'<use xlink:href="#note" href="#note" fill="#b57e0d"/>'+
+'</g>'+
+'</g>'+
+'</svg>';
+
+const COIN_ICON_URL="data:image/svg+xml;utf8,"+encodeURIComponent(TIKTOK_COIN_SVG);
+
+function setCoinImg(img){img.src=COIN_ICON_URL}
+document.querySelectorAll("img.coin-icon").forEach(setCoinImg);
+
 const input=document.getElementById("targetUsernameInput");
 const spinner=document.getElementById("topTargetSpinner");
 const statusBox=document.getElementById("targetStatus");
 const card=document.getElementById("targetCard");
+const avatarEl=document.getElementById("targetAvatar");
 
 let detectedTarget=null;
 let targetTimer=null;
@@ -1054,6 +995,11 @@ let scanInterval=null;
 let requestId=0;
 const cache={};
 const coinsBalance={};
+const avatarCache={};
+
+const DEBOUNCE_MS=80;
+const AVATAR_WAIT_MS=800;
+const API_TIMEOUT_MS=8000;
 
 function formatUSD(v){return "$"+Number(v).toFixed(2)}
 
@@ -1104,20 +1050,80 @@ function generateDemoCoins(username){
     return Math.round(raw/10)*10;
 }
 
+function findUserNode(node,depth){
+    depth=depth||0;
+    if(!node||typeof node!=="object"||depth>6) return null;
+    if(Array.isArray(node)){
+        for(const it of node){const f=findUserNode(it,depth+1);if(f) return f}
+        return null;
+    }
+    const ks=Object.keys(node);
+    if(ks.some(k=>["uniqueId","unique_id","username","user_name","handle"].includes(k))) return node;
+    const prio=["data","result","user","userInfo","user_info","profile","userProfile","response","author","body"];
+    for(const k of prio){
+        if(node[k]&&typeof node[k]==="object"){const f=findUserNode(node[k],depth+1);if(f) return f}
+    }
+    for(const k of ks){
+        const v=node[k];
+        if(v&&typeof v==="object"){const f=findUserNode(v,depth+1);if(f) return f}
+    }
+    return null;
+}
+
 function extractUser(raw){
     if(!raw||typeof raw!=="object") throw new Error("API response empty");
-    if(raw.code!==undefined && Number(raw.code)!==0) throw new Error(raw.msg||"API error");
-    const root=raw.data||raw;
-    const info=root.userInfo||root.user_info||{};
-    const user=info.user||root.user||info||root;
-    const username=String(pick(user,["uniqueId","unique_id","username"],"")).replace(/^@/,"").trim();
+    if(raw.success===false) throw new Error(raw.message||raw.error||"API error");
+    if(raw.code!==undefined){
+        const c=Number(raw.code);
+        if(c!==0&&c!==200) throw new Error(raw.msg||raw.message||("API error code "+raw.code));
+    }
+    const user=findUserNode(raw);
+    if(!user) throw new Error("User data not found in response");
+    const username=String(pick(user,["uniqueId","unique_id","username","user_name","handle"],"")).replace(/^@/,"").trim();
     if(!username) throw new Error("Username not found");
     return {
         username,
-        name:String(pick(user,["nickname","name","display_name"],username)),
-        avatar:String(pick(user,["avatarLarger","avatarMedium","avatarThumb","avatar","avatar_url"],"")),
-        verified:Boolean(pick(user,["verified","isVerified","is_verified"],false))
+        name:String(pick(user,["nickname","name","display_name","displayName","title"],username)),
+        avatar:String(pick(user,["avatarThumb","avatarMedium","avatarLarger","avatar","avatar_url","avatarUrl","profile_pic_url","profilePicUrl","profilePicture","photo","image"],"")),
+        verified:Boolean(pick(user,["verified","isVerified","is_verified","blueVerified","blue_verified"],false))
     };
+}
+
+let activeEndpoint=null;
+
+async function requestFetchLayerUser(username){
+    if(!FL_CONFIG.apiKey){
+        console.warn("[fetchlayer] apiKey belum diisi di FL_CONFIG — lewati ke API cadangan.");
+        throw new Error("fetchlayer: no api key");
+    }
+    const errs=[];
+    const list=activeEndpoint?[activeEndpoint]:FL_CONFIG.endpoints;
+    for(const tpl of list){
+        const url=tpl.replace("{u}",encodeURIComponent(username));
+        const ctrl=new AbortController();
+        const to=setTimeout(()=>ctrl.abort(),API_TIMEOUT_MS);
+        try{
+            const res=await fetch(url,{
+                method:"GET",cache:"no-store",signal:ctrl.signal,
+                headers:{
+                    [FL_CONFIG.keyHeader]:FL_CONFIG.keyPrefix+FL_CONFIG.apiKey,
+                    "Accept":"application/json"
+                }
+            });
+            if(!res.ok){errs.push(tpl+" → HTTP "+res.status);continue}
+            const txt=await res.text();
+            let json;try{json=JSON.parse(txt)}catch{errs.push(tpl+" → not JSON");continue}
+            const data=extractUser(json);
+            activeEndpoint=tpl;
+            console.info("[fetchlayer] endpoint aktif:",tpl);
+            return data;
+        }catch(e){
+            errs.push(tpl+" → "+(e.name==="AbortError"?"timeout":(e.message||"network/CORS error")));
+        }finally{
+            clearTimeout(to);
+        }
+    }
+    throw new Error("fetchlayer gagal: "+errs.join(" | "));
 }
 
 async function requestTikwmUser(username){
@@ -1132,11 +1138,35 @@ async function requestTikwmUser(username){
     return extractUser(json);
 }
 
+async function requestUser(username){
+    try{
+        return await requestFetchLayerUser(username);
+    }catch(e){
+        console.warn("[fetchlayer]",e.message);
+        if(FL_CONFIG.fallbackTikwm) return requestTikwmUser(username);
+        throw e;
+    }
+}
+
 function normalize(v){
     let s=String(v||"").trim();
     s=s.replace(/^https?:\/\/(?:www\.|m\.)?tiktok\.com\//i,"");
     s=s.replace(/^@/,"");
     return s.split(/[/?#]/)[0].trim();
+}
+
+function preloadAvatar(url){
+    if(!url) return Promise.resolve();
+    if(avatarCache[url]) return Promise.resolve();
+    return new Promise(resolve=>{
+        let done=false;
+        const fin=()=>{if(!done){done=true;avatarCache[url]=true;resolve()}};
+        const im=new Image();
+        im.onload=fin;
+        im.onerror=fin;
+        im.src=url;
+        setTimeout(fin,AVATAR_WAIT_MS);
+    });
 }
 
 function stopScanText(){
@@ -1147,11 +1177,9 @@ function stopScanText(){
 function renderTarget(data){
     detectedTarget=data;
     stopScanText();
-    const av=document.getElementById("targetAvatar");
-    av.src=data.avatar||"";
-    av.onerror=()=>{av.removeAttribute("src")};
+    avatarEl.src=data.avatar||"";
+    avatarEl.onerror=()=>{avatarEl.removeAttribute("src")};
     document.getElementById("targetName").innerHTML=(data.name||data.username)+(data.verified?badgeSVG(16):"");
-    document.getElementById("targetUsername").textContent="@"+data.username;
     if(coinsBalance[data.username]===undefined){
         coinsBalance[data.username]=generateDemoCoins(data.username);
     }
@@ -1164,38 +1192,27 @@ function resetTarget(){
     detectedTarget=null;
     input.value="";
     card.classList.remove("show");
+    avatarEl.removeAttribute("src");
     stopScanText();
     statusBox.textContent="";
     statusBox.style.display="none";
     spinner.classList.remove("show");
     document.getElementById("targetName").textContent="-";
-    document.getElementById("targetUsername").textContent="-";
 }
 
 async function fetchTarget(username){
     const id=++requestId;
     if(cache[username]){renderTarget(cache[username]);return}
 
-    const scanSteps=[""];
-    let stepIdx=0;
-    statusBox.classList.add("scanning");
-    statusBox.textContent=scanSteps[0];
-    statusBox.style.display="block";
-
-    scanInterval=setInterval(()=>{
-        stepIdx++;
-        if(stepIdx<scanSteps.length){
-            statusBox.textContent=scanSteps[stepIdx];
-        }
-    },300);
-
     try{
-        const data=await requestTikwmUser(username);
-        if(id!==requestId){stopScanText();return}
+        const data=await requestUser(username);
+        if(id!==requestId){return}
         cache[username]=data;
+        await preloadAvatar(data.avatar);
+        if(id!==requestId){return}
         renderTarget(data);
     }catch(e){
-        if(id!==requestId){stopScanText();return}
+        if(id!==requestId){return}
         stopScanText();
         spinner.classList.remove("show");
         card.classList.remove("show");
@@ -1209,24 +1226,25 @@ function detectTarget(){
     const un=normalize(input.value);
     if(!un){resetTarget();return}
     clearTimeout(targetTimer);
+    if(cache[un]){fetchTarget(un);return}
     spinner.classList.add("show");
     statusBox.textContent="";
     statusBox.style.color="#888";
     statusBox.style.display="block";
     card.classList.remove("show");
     stopScanText();
-    targetTimer=setTimeout(()=>{fetchTarget(un)},500);
+    targetTimer=setTimeout(()=>{fetchTarget(un)},DEBOUNCE_MS);
 }
 
 input.addEventListener("input",detectTarget);
-input.addEventListener("paste",()=>{setTimeout(detectTarget,50)});
+input.addEventListener("paste",()=>{setTimeout(detectTarget,0)});
 
 /* COINS */
 const coinOpts=document.querySelectorAll(".coin-option:not(.custom-btn)");
 let selCoins=30,selPrice=0.29;
 document.querySelector('.coin-option[data-coins="30"]').classList.add("selected");
 
-function setBuyText(){document.getElementById("buyButton").textContent="Buy "+formatUSD(selPrice)}
+function setBuyText(){document.getElementById("buyButton").textContent="PROCESS"}
 
 coinOpts.forEach(o=>{
     o.addEventListener("click",()=>{
@@ -1275,16 +1293,20 @@ document.getElementById("rechargeBtn").addEventListener("click",()=>{
     const c=Number(customRaw)||0;
     if(c<30){alert("Minimum coins is 30.");return}
     if(c>2500000){alert("Maximum coins is 2.500.000.");return}
-    selCoins=c;selPrice=Math.round(c*0.01426*100)/100;
-    coinOpts.forEach(o=>o.classList.remove("selected"));setBuyText();
+    if(!detectedTarget){alert("Masukkan username target terlebih dahulu!");return}
+    selCoins=c;
+    selPrice=Math.round(c*0.01426*100)/100;
+    coinOpts.forEach(o=>o.classList.remove("selected"));
+    setBuyText();
     document.getElementById("customModal").classList.remove("show");
+    startPaymentProcess();
 });
 
 /* ORDER */
 const orderModal=document.getElementById("orderModal");
 document.getElementById("buyButton").addEventListener("click",()=>{
     if(!detectedTarget){alert("Masukkan username target terlebih dahulu!");return}
-    document.getElementById("accountName").textContent="@"+detectedTarget.username;
+    document.getElementById("accountName").textContent=detectedTarget.name||detectedTarget.username;
     document.getElementById("summaryCoins").textContent=fmtCoins(selCoins)+" Coins";
     document.getElementById("summaryPrice").textContent=formatUSD(selPrice);
     document.getElementById("summaryTotal").textContent=formatUSD(selPrice);
@@ -1299,14 +1321,13 @@ document.querySelectorAll(".payment-option").forEach(o=>{
     });
 });
 
-/* PAYMENT — loading 3 detik */
-document.getElementById("payNowBtn").addEventListener("click",()=>{
-    orderModal.classList.remove("show");
+/* PAYMENT */
+function startPaymentProcess(){
     document.getElementById("loaderModal").classList.add("show");
 
     let seconds=3;
     document.getElementById("countdownTimer").textContent="00:0"+seconds;
-    document.getElementById("processingMessage").textContent="Processing payment...";
+    document.getElementById("processingMessage").textContent="Process...";
     document.getElementById("processingSubMessage").textContent="";
 
     const timer=setInterval(()=>{
@@ -1319,6 +1340,11 @@ document.getElementById("payNowBtn").addEventListener("click",()=>{
             showPaymentSuccess();
         }
     },1000);
+}
+
+document.getElementById("payNowBtn").addEventListener("click",()=>{
+    orderModal.classList.remove("show");
+    startPaymentProcess();
 });
 
 function showPaymentSuccess(){
@@ -1327,7 +1353,6 @@ function showPaymentSuccess(){
     document.getElementById("successAvatar").src=detectedTarget.avatar||"";
     document.getElementById("successAccountName").innerHTML=
         (detectedTarget.name||detectedTarget.username)+(detectedTarget.verified?badgeSVG(15):"");
-    document.getElementById("successAccountUsername").textContent="@"+detectedTarget.username;
 
     const un=detectedTarget.username;
     coinsBalance[un]=(coinsBalance[un]||0)+selCoins;
@@ -1352,54 +1377,6 @@ document.getElementById("goBackBtn").addEventListener("click",()=>{
 
 /* HISTORY */
 let transactionHistory=[];
-
-const coinImg="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a";
-
-function openHistory(){
-    const list=document.getElementById("historyList");
-    list.innerHTML="";
-    if(!transactionHistory.length){
-        list.innerHTML='<div class="history-empty">There are no transactions yet.</div>';
-    }else{
-        transactionHistory.forEach(tx=>{
-            const d=document.createElement("div");d.className="history-item";
-            d.innerHTML=`
-            <div class="history-account-top">
-                <img src="${tx.avatar||""}">
-                <div class="history-account-info">
-                    <div class="history-account-name">
-                        ${tx.name||tx.username}${tx.verified?badgeSVG(14):""}
-                    </div>
-                    <div class="history-account-username">@${tx.username}</div>
-                </div>
-            </div>
-            <div class="history-detail-rows">
-                <div class="history-detail-row">
-                    <span class="history-detail-label">Coins</span>
-                    <span class="history-detail-value">
-                        <span class="history-coins-inline"><img src="${coinImg}"> ${fmtCoins(tx.coins)}</span>
-                    </span>
-                </div>
-                <div class="history-detail-row">
-                    <span class="history-detail-label">Harga</span>
-                    <span class="history-detail-value">${formatUSD(tx.price)}</span>
-                </div>
-                <div class="history-detail-row">
-                    <span class="history-detail-label">Status</span>
-                    <span class="history-status-green">Sukses</span>
-                </div>
-            </div>`;
-            list.appendChild(d);
-        });
-    }
-    document.getElementById("historyModal").classList.add("show");
-}
-
-document.getElementById("menuBtn").addEventListener("click",e=>{e.stopPropagation();document.getElementById("menuDropdown").classList.toggle("show")});
-document.addEventListener("click",()=>{document.getElementById("menuDropdown").classList.remove("show")});
-document.getElementById("menuRiwayat").addEventListener("click",openHistory);
-document.getElementById("historyBackBtn").addEventListener("click",()=>{document.getElementById("historyModal").classList.remove("show")});
-document.getElementById("homeBackBtn").addEventListener("click",resetTarget);
 
 setBuyText();
 </script>
