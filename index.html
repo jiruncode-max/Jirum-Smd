@@ -1,916 +1,2186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>TikTok Coins - Get Coins</title>
-  <meta name="description" content="Purchase TikTok coins securely">
-  <link rel="icon" href="./TikTok Coins - Buy TikTok Coins with Visa_files/tiktok-logo.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SUMEDANG</title>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+<style>
+*{box-sizing:border-box}
 
-  <style>
-    /* ===== KUNCI: halaman tidak bisa di-scroll ===== */
-    html, body {
-      height: 100%;
-      overflow: hidden;              /* blokir scroll halaman */
-      overscroll-behavior: none;     /* hilangkan efek bounce/tarik */
-    }
+body{
+    margin:0;
+    background:#f0f2f5;
+    color:#333;
+    font-family:Arial,Roboto,sans-serif;
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+}
 
-    /* Scrollbar disembunyikan (untuk area yang menggulir internal) */
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.container{
+    width:100%;
+    max-width:450px;
+    min-height:100vh;
+    background:#fff;
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+    display:flex;
+    flex-direction:column;
+    position:relative;
+}
 
-    /* Paket koin terpilih */
-    .coin-option.selected {
-      box-shadow: inset 0 0 0 2px #ec4899;
-      background-color: #fdf2f8;
-    }
-    /* Hilangkan spinner input angka */
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-    input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+header.main-header{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:13px;
+    border-bottom:1px solid #ddd;
+    position:relative;
+    background:#fff;
+}
 
-    /* Semua tombol pakai kursor tangan */
-    button { cursor: pointer; }
-    button:disabled { cursor: not-allowed; }
+.main-header h1{
+    margin:0;
+    font-weight:600;
+}
 
-    /* Animasi popup */
-    .modal-hidden { pointer-events: none; visibility: hidden; }
-    .modal-backdrop { transition: opacity .2s ease; }
-    .modal-box { transition: transform .2s ease, opacity .2s ease; pointer-events: auto; }
-    .modal-hidden .modal-backdrop { opacity: 0; }
-    .modal-hidden .modal-box { opacity: 0; transform: translateY(20px) scale(.96); }
+#homeBackBtn{
+    position:absolute;
+    left:10px;
+    background:none;
+    border:0;
+    font-size:20px;
+    cursor:pointer;
+}
 
-    /* ===== Icon ceklis sukses ===== */
-    /* Bulatan hijau: STATIS, tidak bergerak */
-    .icon-success { /* tanpa animasi */ }
+/* ===== GIFT SLIDESHOW ===== */
+.gift-slideshow{
+    position:relative;
+    width:280px;
+    height:44px;
+    overflow:hidden;
+}
 
-    /* Ceklis: tergambar dari kiri -> tahan -> hilang -> ulangi TERUS */
-    @keyframes checkLoop {
-      0%   { stroke-dashoffset: 24; opacity: 1; }
-      35%  { stroke-dashoffset: 0;  opacity: 1; }
-      75%  { stroke-dashoffset: 0;  opacity: 1; }
-      85%  { stroke-dashoffset: 0;  opacity: 0; }
-      100% { stroke-dashoffset: 24; opacity: 0; }
-    }
-    .check-path {
-      stroke-dasharray: 24;
-      stroke-dashoffset: 24;
-      animation: checkLoop 2s ease-in-out .5s infinite;
-    }
+.gift-slide{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    transform:translateY(20px) scale(.85);
+    transition:all .5s cubic-bezier(.4,0,.2,1);
+    pointer-events:none;
+}
 
-    /* Tombol keypad saat ditekan */
-    .key:active { background-color: #e5e7eb; transform: scale(.96); }
+.gift-slide.active{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:auto;
+}
 
-    /* Animasi muncul kartu profil */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in { animation: fadeIn .25s ease both; }
-  </style>
+.gift-slide.exit{
+    opacity:0;
+    transform:translateY(-20px) scale(.85);
+}
+
+.gift-img{
+    width:34px;
+    height:34px;
+    object-fit:contain;
+    display:inline-block;
+    animation:giftFloat 1.4s ease-in-out infinite;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.18));
+    flex-shrink:0;
+}
+
+.gift-slide:nth-child(2) .gift-img{animation-delay:.25s}
+.gift-slide:nth-child(3) .gift-img{animation-delay:.5s}
+.gift-slide:nth-child(4) .gift-img{animation-delay:.75s}
+
+@keyframes giftFloat{
+    0%,100%{transform:translateY(0) scale(1)}
+    30%{transform:translateY(-4px) scale(1.08)}
+    70%{transform:translateY(2px) scale(.97)}
+}
+
+.gift-arrow{
+    color:#fe2c55;
+    font-size:20px;
+    font-weight:700;
+    flex-shrink:0;
+    margin:0 14px;
+    animation:arrowPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes arrowPulse{
+    0%,100%{transform:translateX(0);opacity:1}
+    25%{transform:translateX(5px);opacity:.7}
+    75%{transform:translateX(-5px);opacity:.7}
+}
+
+.gift-coin-row{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    flex-shrink:0;
+}
+
+.gift-coin-img{
+    width:20px;
+    height:20px;
+}
+
+.gift-coin-num{
+    font-size:16px;
+    font-weight:800;
+    color:#333;
+}
+
+.header-menu-wrap{
+    position:absolute;
+    right:12px;
+}
+
+.header-menu-btn{
+    background:none;
+    border:0;
+    font-size:22px;
+    cursor:pointer;
+    padding:4px 8px;
+}
+
+.menu-dropdown{
+    display:none;
+    position:absolute;
+    right:0;
+    top:100%;
+    min-width:160px;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 6px 20px rgba(0,0,0,.12);
+    z-index:200;
+    overflow:hidden;
+}
+
+.menu-dropdown.show{display:block}
+
+.menu-dropdown button{
+    width:100%;
+    border:0;
+    background:#fff;
+    padding:12px 16px;
+    text-align:left;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.menu-dropdown button:hover{background:#f5f5f5}
+
+.content-wrapper{
+    flex:1;
+    overflow-y:auto;
+}
+
+.top-nav{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:22px 15px;
+    border-bottom:1px solid #eee;
+}
+
+.top-nav>img{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    flex-shrink:0;
+}
+
+.top-target-box{
+    flex:1;
+    min-width:0;
+}
+
+.top-target-input-row{
+    position:relative;
+}
+
+.top-target-input-row input{
+    width:100%;
+    height:40px;
+    padding:10px 34px 10px 11px;
+    border:1px solid #e2e2e2;
+    border-radius:9px;
+    outline:none;
+    background:#fafafa;
+    font-size:14px;
+}
+
+.top-target-input-row input:focus{
+    border-color:#fe2c55;
+    background:#fff;
+}
+
+.top-target-spinner{
+    display:none;
+    position:absolute;
+    right:11px;
+    top:12px;
+    width:15px;
+    height:15px;
+    border:2px solid #ddd;
+    border-top-color:#fe2c55;
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+}
+
+.top-target-spinner.show{display:block}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.top-target-status{
+    display:none;
+    margin-top:4px;
+    font-size:10px;
+}
+
+.target-card{
+    display:none;
+    margin:0 15px 12px;
+    border:1px solid #eee;
+    border-radius:12px;
+    padding:12px;
+    background:#fafafa;
+}
+
+.target-card.show{display:block}
+
+.target-card-top{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.target-avatar{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#eee;
+}
+
+.target-name{
+    font-size:16px;
+    font-weight:700;
+    color:#000;
+}
+
+.target-username{
+    font-size:12px;
+    font-weight:600;
+    color:#000;
+    margin-top:2px;
+}
+
+.target-bio{
+    font-size:12px;
+    font-weight:600;
+    color:#000;
+    margin:10px 0 8px;
+    line-height:1.4;
+    white-space:pre-line;
+}
+
+.target-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:6px;
+}
+
+.target-stat{
+    background:#fff;
+    border-radius:8px;
+    padding:9px 4px;
+    text-align:center;
+}
+
+.target-stat b{
+    display:block;
+    font-size:15px;
+    color:#000;
+}
+
+.target-stat span{
+    display:block;
+    font-size:10px;
+    color:#000;
+    margin-top:4px;
+    font-weight:700;
+}
+
+.tiktok-verified-badge{
+    display:inline-flex;
+    vertical-align:middle;
+    align-items:center;
+}
+
+.tiktok-verified-badge svg{display:block}
+
+.recharge-section{
+    padding:15px;
+}
+
+.recharge-section h2{
+    margin:0;
+    font-size:20px;
+    font-weight:400;
+}
+
+.recharge-section>p{
+    font-size:12px;
+    color:#fe2c55;
+    margin-bottom:15px;
+}
+
+.coin-options{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:20px;
+}
+
+.coin-option{
+    width:calc(33.33% - 6px);
+    height:60px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    background:#f7f7f7;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.coin-option:hover,
+.coin-option.selected{
+    background:#fff;
+    border-color:#ffc107;
+    box-shadow:0 0 5px rgba(255,193,7,.6);
+}
+
+.top-row{
+    display:flex;
+    align-items:center;
+    gap:4px;
+}
+
+.coin-option img{
+    width:24px;
+    height:24px;
+}
+
+.coin-option span{
+    font-size:16px;
+    font-weight:700;
+}
+
+.coin-option p{
+    margin:5px 0 0;
+    font-size:12px;
+    color:#777;
+}
+
+.custom-btn{
+    font-weight:700;
+    font-size:14px;
+}
+
+.card{
+    display:flex;
+    align-items:center;
+    background:#f7f7f7;
+    border-radius:12px;
+    padding:15px;
+    margin-top:15px;
+}
+
+.card img{
+    width:30px;
+    height:30px;
+    margin-right:15px;
+}
+
+.card h4{
+    margin:0;
+    font-size:16px;
+}
+
+.card p{
+    margin:0;
+    font-size:12px;
+    color:#666;
+}
+
+.tiktok-brand{
+    text-align:center;
+    font-size:12px;
+    color:#ccc;
+    margin-top:20px;
+}
+
+.tiktok-brand img{
+    height:15px;
+    vertical-align:middle;
+}
+
+.payment-logos{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin:20px 0;
+}
+
+.payment-logos img{
+    width:30px;
+    height:25px;
+    object-fit:contain;
+    opacity:.7;
+}
+
+footer{
+    padding:15px;
+    background:#fff;
+    border-top:1px solid #eee;
+    position:sticky;
+    bottom:0;
+    z-index:10;
+}
+
+.special-offer{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    color:#666;
+    margin-bottom:10px;
+}
+
+.buy-button{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:10px;
+    background:#fe2c55;
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.overlay.show{display:flex}
+
+.modal{
+    background:#fff;
+    width:90%;
+    max-width:450px;
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 0 15px rgba(0,0,0,.2);
+}
+
+.modal-content-bottom{
+    background:#fff;
+    width:100%;
+    max-width:450px;
+    border-radius:20px 20px 0 0;
+    padding:20px;
+    position:absolute;
+    bottom:0;
+}
+
+.modal header{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    padding-bottom:10px;
+    margin-bottom:15px;
+    border-bottom:1px solid #eee;
+}
+
+.modal h2{
+    margin:0;
+    font-size:18px;
+}
+
+.back-btn{
+    position:absolute;
+    left:0;
+    background:none;
+    border:0;
+    font-size:22px;
+    cursor:pointer;
+}
+
+.coin-input-box{
+    display:flex;
+    align-items:center;
+    border:1.5px solid #ddd;
+    border-radius:8px;
+    padding:10px 15px;
+    margin-bottom:6px;
+}
+
+.coin-input-box img{
+    width:24px;
+    height:24px;
+    margin-right:8px;
+}
+
+.coin-input-box input{
+    width:100%;
+    border:0;
+    outline:0;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.coin-hint{
+    font-size:11px;
+    color:#999;
+    margin:0 0 16px;
+}
+
+#usdAmountDisplay{
+    font-size:16px;
+    margin:0 0 20px;
+}
+
+.keypad{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin-bottom:15px;
+}
+
+.keypad button{
+    padding:12px 0;
+    background:#f8f8f8;
+    border:1px solid #e8e8e8;
+    border-radius:6px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.custom-modal-offer,
+.custom-total-row,
+.total-row{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-top:1px solid #eee;
+}
+
+.custom-modal-offer{
+    font-size:13px;
+    color:#666;
+}
+
+.custom-total-row{
+    font-size:16px;
+    font-weight:600;
+}
+
+.recharge-btn,
+.pay-btn,
+.go-back-btn{
+    width:100%;
+    padding:14px;
+    border:0;
+    border-radius:9px;
+    background:#fe2c55;
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.secure-payment{
+    background:#e8f5e9;
+    color:#388e3c;
+    padding:12px;
+    border-radius:8px;
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.order-details{
+    border-bottom:1px solid #eee;
+    padding-bottom:12px;
+}
+
+.detail-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+    font-size:15px;
+}
+
+.payment-method-section{
+    margin-top:15px;
+}
+
+.payment-method-section h4{
+    margin-bottom:12px;
+}
+
+.payment-option{
+    display:flex;
+    align-items:center;
+    border:1px solid #e9ecef;
+    border-radius:8px;
+    padding:12px 15px;
+    margin-bottom:8px;
+    cursor:pointer;
+    position:relative;
+}
+
+.payment-option.selected{
+    background:#f8f9fa;
+    border-color:#007bff;
+}
+
+.payment-option svg{
+    margin-right:12px;
+}
+
+.payment-option span{
+    font-size:14px;
+}
+
+.payment-option .dot{
+    display:none;
+}
+
+.payment-option.selected .dot{
+    display:block;
+    position:absolute;
+    right:15px;
+    width:18px;
+    height:18px;
+    background:#007bff;
+    border-radius:50%;
+}
+
+.payment-option.selected .dot:after{
+    content:"";
+    width:8px;
+    height:8px;
+    background:#fff;
+    border-radius:50%;
+    position:absolute;
+    left:5px;
+    top:5px;
+}
+
+.policy-text{
+    font-size:12px;
+    color:#6c757d;
+    text-align:center;
+    line-height:1.5;
+}
+
+.loader-container{
+    background:#fff;
+    width:90%;
+    max-width:400px;
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+}
+
+.tiktok-loader{
+    position:relative;
+    width:100px;
+    height:50px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:0 auto 20px;
+}
+
+.tiktok-loader .dot{
+    position:absolute;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+}
+
+.dot.red{
+    background:#fe2c55;
+    animation:moveRight .7s ease-in-out infinite;
+}
+
+.dot.cyan{
+    background:#00f2ea;
+    animation:moveLeft .7s ease-in-out infinite;
+}
+
+@keyframes moveLeft{
+    0%,100%{transform:translateX(0)}
+    50%{transform:translateX(-25px) scale(.8)}
+}
+
+@keyframes moveRight{
+    0%,100%{transform:translateX(0)}
+    50%{transform:translateX(25px) scale(.8)}
+}
+
+#processingMessage{
+    font-size:16px;
+    color:#555;
+}
+
+#processingSubMessage{
+    font-size:14px;
+    color:#777;
+}
+
+#countdownTimer{
+    font-size:18px;
+    font-weight:bold;
+    color:#fe2c55;
+}
+
+.success-container{
+    background:#fff;
+    width:90%;
+    max-width:400px;
+    border-radius:12px;
+    padding:25px 20px;
+    text-align:center;
+}
+
+.success-icon{
+    width:64px;
+    height:64px;
+    margin:0 auto 15px;
+    border-radius:50%;
+    background:#22c55e;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:38px;
+    font-weight:800;
+}
+
+.success-container h1{
+    font-size:20px;
+    font-weight:500;
+}
+
+.success-account-card{
+    padding:12px;
+    border:1px solid #eee;
+    border-radius:12px;
+    background:#fafafa;
+    text-align:left;
+    margin-bottom:20px;
+}
+
+.success-account-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.success-account-avatar{
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#eee;
+}
+
+.success-account-name{
+    font-size:15px;
+    font-weight:700;
+}
+
+.success-account-username{
+    font-size:12px;
+    font-weight:600;
+    margin-top:2px;
+}
+
+.success-account-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:6px;
+    margin-top:10px;
+}
+
+.success-account-stat{
+    text-align:center;
+    background:#fff;
+    border-radius:8px;
+    padding:7px 3px;
+}
+
+.success-account-stat b{
+    display:block;
+    font-size:13px;
+}
+
+.success-account-stat span{
+    display:block;
+    font-size:9px;
+    margin-top:2px;
+    font-weight:700;
+}
+
+.history-list{
+    max-height:60vh;
+    overflow-y:auto;
+}
+
+.history-empty{
+    text-align:center;
+    color:#aaa;
+    padding:40px 0;
+}
+
+.history-item{
+    background:#fafafa;
+    border:1px solid #eee;
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:10px;
+}
+
+.history-account-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.history-account-top img{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#eee;
+}
+
+.history-account-name{
+    font-size:14px;
+    font-weight:700;
+}
+
+.history-account-username{
+    font-size:12px;
+    font-weight:600;
+}
+
+.history-account-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:6px;
+    margin-top:10px;
+}
+
+.history-account-stat{
+    background:#fff;
+    border-radius:8px;
+    padding:8px 4px;
+    text-align:center;
+}
+
+.history-account-stat b{
+    display:block;
+    font-size:13px;
+}
+
+.history-account-stat span{
+    display:block;
+    font-size:9px;
+    font-weight:700;
+}
+</style>
 </head>
 
-<body class="bg-gray-50 text-gray-900">
-  <div class="flex h-screen flex-col overflow-hidden">
+<body>
 
-    <!-- ================= HEADER ================= -->
-    <header class="shrink-0 border-b border-gray-100 bg-white">
-      <div class="flex h-16 items-center justify-between px-6">
-        <h1 class="text-2xl font-bold tracking-tight">Get Coins</h1>
-        <div class="flex items-center gap-5 text-gray-800">
-          <button type="button" aria-label="Menu" class="transition hover:text-black">
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="4" x2="20" y1="6" y2="6"></line>
-              <line x1="4" x2="20" y1="12" y2="12"></line>
-              <line x1="4" x2="20" y1="18" y2="18"></line>
-            </svg>
-          </button>
-          <button type="button" aria-label="Help" class="transition hover:text-black">
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-              <path d="M12 17h.01"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </header>
+<div class="container" id="mainPage">
 
-    <!-- ================= MAIN (area konten, tidak men-scroll halaman) ================= -->
-    <main class="no-scrollbar flex-1 overflow-y-auto overscroll-contain pb-40">
-      <div class="mx-auto w-full max-w-md px-4 md:max-w-2xl lg:max-w-4xl">
+<header class="main-header">
+<button id="homeBackBtn">←</button>
 
-        <!-- Badge secure payment -->
-        <div class="mt-5 flex justify-center">
-          <div class="flex items-center gap-2 rounded-full bg-green-50 px-5 py-2.5 text-green-600">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
-            </svg>
-            <span class="font-medium">Secure Payment</span>
-            <span class="text-green-500">›</span>
-          </div>
-        </div>
+<div class="gift-slideshow" id="giftSlideshow">
 
-        <!-- Username + deteksi akun TikTok -->
-        <section class="mt-4 rounded-xl bg-white p-4 shadow-sm">
-          <label for="username" class="mb-2 block text-sm font-medium text-gray-800">Username</label>
+<div class="gift-slide active">
+<img class="gift-img" src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/a4c4dc437fd3a6632aba149769491f49.png~tplv-obj.webp" alt="Rose">
+<span class="gift-arrow">➔</span>
+<div class="gift-coin-row">
+<span class="gift-coin-num">5.000</span>
+</div>
+</div>
 
-          <!-- Input dengan indikator loading -->
-          <div class="relative">
-            <input
-              id="username"
-              type="text"
-              placeholder=""
-              autocomplete="off" spellcheck="false"
-              class="h-12 w-full rounded-lg border border-gray-300 pr-11 pl-3 text-base outline-none transition
-                     placeholder:text-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
-            />
-            <!-- Spinner kecil di dalam input -->
-            <div id="inputSpinner" class="absolute right-3 top-1/2 hidden -translate-y-1/2">
-              <div class="h-5 w-5 animate-spin rounded-full border-2 border-gray-200 border-t-pink-500"></div>
-            </div>
-          </div>
+<div class="gift-slide">
+<img class="gift-img" src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eb77ead5c3abb6da6034d3cf6cfeb438~tplv-obj.webp" alt="Finger Heart">
+<span class="gift-arrow">➔</span>
+<div class="gift-coin-row">
+<span class="gift-coin-num">10.000</span>
+</div>
+</div>
 
-          <!-- Status scanning (muncul saat mengecek) -->
-          <div id="userStatus" class="mt-2 hidden animate-pulse text-xs font-medium text-pink-500">
-          </div>
+<div class="gift-slide">
+<img class="gift-img" src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.webp" alt="I Love You">
+<span class="gift-arrow">➔</span>
+<div class="gift-coin-row">
+<span class="gift-coin-num">30.000</span>
+</div>
+</div>
 
-          <!-- Kartu profil: foto + nama (+ centang biru ASLI jika akun terverifikasi) -->
-          <div id="userPreview" class="mt-3 hidden items-center gap-3 rounded-lg bg-gray-50 p-3">
-            <img id="userAvatar" alt="Avatar" class="h-12 w-12 shrink-0 rounded-full border border-gray-200 object-cover" />
-            <div class="flex min-w-0 items-center gap-1.5">
-              <span id="userNickname" class="truncate font-semibold">Nickname</span>
-              <!-- Centang biru TikTok — tampil HANYA jika verified=true dari API -->
-              <svg id="userVerifiedBadge" class="hidden shrink-0" width="17" height="17" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" fill="#20D5EC"/>
-                <path d="M7.5 12.2l3 3 6-6" stroke="#fff" stroke-width="2" fill="none"
-                      stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
+<div class="gift-slide">
+<img class="gift-img" src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/e0589e95a2b41970f0f30f6202f5fce6~tplv-obj.webp" alt="Perfume">
+<span class="gift-arrow">➔</span>
+<div class="gift-coin-row">
+<span class="gift-coin-num">500.000</span>
+</div>
+</div>
 
-          <!-- Pesan error -->
-          <div id="userError" class="mt-3 hidden text-sm font-medium text-red-500"></div>
-        </section>
+<div class="gift-slide">
+<img class="gift-img" src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/resource/79a02148079526539f7599150da9fd28.png~tplv-obj.webp" alt="Perfume">
+<span class="gift-arrow">➔</span>
+<div class="gift-coin-row">
+<span class="gift-coin-num">1.000.000</span>
+</div>
+</div>
 
-        <!-- Recharge -->
-        <section class="mt-4 rounded-xl bg-white p-4 shadow-sm">
-          <div class="flex items-center gap-2">
-            <img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a"
-                 alt="TikTok" class="h-8 w-8" />
-            <h2 class="text-2xl font-bold">Recharge</h2>
-          </div>
+<div class="gift-slide">
+<img class="gift-img" src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/46fa70966d8e931497f5289060f9a794~tplv-obj.webp" alt="Perfume">
+<span class="gift-arrow">➔</span>
+<div class="gift-coin-row">
+<span class="gift-coin-num">2.500.000</span>
+</div>
+</div>
 
-          <p class="mt-2 text-pink-500">Save around 25% with a lower third-party service fee.</p>
+</div>
 
-          <!-- Grid paket koin: 2 baris x 4 kolom -->
-          <div class="mt-4 grid grid-cols-4 gap-2 sm:gap-4">
+<div class="header-menu-wrap">
+<button class="header-menu-btn" id="menuBtn">☰</button>
 
-            <!-- ===== BARIS 1 ===== -->
+<div class="menu-dropdown" id="menuDropdown">
+<button id="menuRiwayat">📋 &nbsp; Riwayat</button>
+</div>
+</div>
+</header>
 
-            <!-- 30 koin: $0.29 -->
-            <button type="button" class="coin-option rounded-lg bg-gray-100 p-2 text-center transition hover:bg-gray-200 sm:p-4" data-coins="30" data-price="0.29">
-              <div class="flex items-center justify-center gap-1">
-                <img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a" alt="Coin" class="h-4 w-4 sm:h-5 sm:w-5" />
-                <span class="text-lg font-bold sm:text-xl">30</span>
-              </div>
-              <div class="mt-1 text-xs text-gray-600 sm:text-sm">$0.29</div>
-            </button>
+<div class="content-wrapper">
 
-            <button type="button" class="coin-option rounded-lg bg-gray-100 p-2 text-center transition hover:bg-gray-200 sm:p-4" data-coins="350" data-price="4.99">
-              <div class="flex items-center justify-center gap-1">
-                <img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a" alt="Coin" class="h-4 w-4 sm:h-5 sm:w-5" />
-                <span class="text-lg font-bold sm:text-xl">350</span>
-              </div>
-              <div class="mt-1 text-xs text-gray-600 sm:text-sm">$4.99</div>
-            </button>
+<nav class="top-nav">
 
-            <button type="button" class="coin-option rounded-lg bg-gray-100 p-2 text-center transition hover:bg-gray-200 sm:p-4" data-coins="700" data-price="9.99">
-              <div class="flex items-center justify-center gap-1">
-                <img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a" alt="Coin" class="h-4 w-4 sm:h-5 sm:w-5" />
-                <span class="text-lg font-bold sm:text-xl">700</span>
-              </div>
-              <div class="mt-1 text-xs text-gray-600 sm:text-sm">$9.99</div>
-            </button>
+<img src="https://static.vecteezy.com/system/resources/previews/020/964/382/original/tiktok-circle-icon-for-web-design-free-png.png">
 
-            <button type="button" class="coin-option rounded-lg bg-gray-100 p-2 text-center transition hover:bg-gray-200 sm:p-4" data-coins="1400" data-price="19.99">
-              <div class="flex items-center justify-center gap-1">
-                <img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a" alt="Coin" class="h-4 w-4 sm:h-5 sm:w-5" />
-                <span class="text-lg font-bold sm:text-xl">1.400</span>
-              </div>
-              <div class="mt-1 text-xs text-gray-600 sm:text-sm">$19.99</div>
-            </button>
+<div class="top-target-box">
 
-            <!-- ===== BARIS 2 ===== -->
-            <button type="button" class="coin-option rounded-lg bg-gray-100 p-2 text-center transition hover:bg-gray-200 sm:p-4" data-coins="3500" data-price="49.99">
-              <div class="flex items-center justify-center gap-1">
-                <img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a" alt="Coin" class="h-4 w-4 sm:h-5 sm:w-5" />
-                <span class="text-lg font-bold sm:text-xl">3.500</span>
-              </div>
-              <div class="mt-1 text-xs text-gray-600 sm:text-sm">$49.99</div>
-            </button>
+<div class="top-target-input-row">
+<input
+id="targetUsernameInput"
+placeholder=""
+autocomplete="off"
+spellcheck="false"
+>
+<span id="topTargetSpinner" class="top-target-spinner"></span>
+</div>
 
-            <button type="button" class="coin-option rounded-lg bg-gray-100 p-2 text-center transition hover:bg-gray-200 sm:p-4" data-coins="7000" data-price="99.99">
-              <div class="flex items-center justify-center gap-1">
-                <img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a" alt="Coin" class="h-4 w-4 sm:h-5 sm:w-5" />
-                <span class="text-lg font-bold sm:text-xl">7.000</span>
-              </div>
-              <div class="mt-1 text-xs text-gray-600 sm:text-sm">$99.99</div>
-            </button>
+<div id="targetStatus" class="top-target-status"></div>
 
-            <button type="button" class="coin-option rounded-lg bg-gray-100 p-2 text-center transition hover:bg-gray-200 sm:p-4" data-coins="17500" data-price="249.99">
-              <div class="flex items-center justify-center gap-1">
-                <img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a" alt="Coin" class="h-4 w-4 sm:h-5 sm:w-5" />
-                <span class="text-lg font-bold sm:text-xl">17.500</span>
-              </div>
-              <div class="mt-1 text-xs text-gray-600 sm:text-sm">$249.99</div>
-            </button>
+</div>
+</nav>
 
-            <!-- Custom -->
-            <button type="button" id="customCard" class="coin-option rounded-lg bg-gray-100 p-2 text-center transition hover:bg-gray-200 sm:p-4">
-              <div class="flex items-center justify-center">
-                <span class="text-lg font-bold sm:text-xl">Custom</span>
-              </div>
-              <div id="customCardPrice" class="mt-1 text-xs text-gray-600 sm:text-sm">&nbsp;</div>
-            </button>
+<div id="targetCard" class="target-card">
 
-          </div>
-        </section>
+<div class="target-card-top">
 
-      </div>
-    </main>
+<img id="targetAvatar" class="target-avatar" alt="Foto profil">
 
-    <!-- ================= FOOTER (tetap di bawah, tanpa scroll) ================= -->
-    <footer class="shrink-0 border-t border-gray-100 bg-white p-4 shadow-[0_-2px_12px_rgba(0,0,0,0.06)]">
-      <div class="mx-auto w-full max-w-md md:max-w-2xl lg:max-w-4xl">
-        <button type="button" id="payBtn" disabled
-          class="flex w-full items-center justify-center gap-2 rounded-full bg-gray-200 py-4 text-lg font-medium text-gray-400 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
-          </svg>
-          <span id="payText">PROCESS</span>
-        </button>
-      </div>
-    </footer>
+<div>
+<div id="targetName" class="target-name">-</div>
+<div id="targetUsername" class="target-username">-</div>
+</div>
 
-  </div>
+</div>
 
-  <!-- ================= POPUP CUSTOM (dengan keypad) ================= -->
-  <div id="customModal" class="modal-hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div id="modalBackdrop" class="modal-backdrop absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+<div id="targetBio" class="target-bio"></div>
 
-    <div class="modal-box no-scrollbar relative max-h-[92vh] w-full max-w-md overflow-y-auto rounded-2xl bg-white shadow-2xl">
+<div class="target-stats">
 
-      <!-- Header: panah kembali + judul -->
-      <div class="sticky top-0 flex items-center border-b border-gray-100 bg-white px-5 py-4">
-        <button type="button" id="modalBack" aria-label="Back" class="text-gray-700 transition hover:text-black">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path>
-          </svg>
-        </button>
-        <h3 class="absolute left-1/2 -translate-x-1/2 text-xl font-bold">Custom</h3>
-      </div>
+<div class="target-stat">
+<b id="targetFollowing">-</b>
+<span>MENGIKUTI</span>
+</div>
 
-      <div class="p-5">
+<div class="target-stat">
+<b id="targetFollowers">-</b>
+<span>PENGIKUT</span>
+</div>
 
-        <!-- Tampilan jumlah koin -->
-        <div class="flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-3">
-          <img src="https://z-cdn-media.chatglm.cn/files/a60c8806-a57b-4962-b2e7-cce2b7585009.png?auth_key=1888338157-fcd059f95b9543a4b5dd243f2bc86ff7-0-701204ef23f0861ef6bb8e4d6fa33d5a"
-               alt="Coin" class="h-7 w-7" />
-          <span id="customDisplay" class="text-2xl font-bold">0</span>
-        </div>
+<div class="target-stat">
+<b id="targetLikes">-</b>
+<span>SUKA</span>
+</div>
 
-        <!-- Info batas & harga -->
-        <div class="mt-2 text-sm text-gray-400">30 – 2.500.000</div>
-        <div id="customPricePreview" class="mt-3 text-lg font-medium">$0.00</div>
-        <!-- Peringatan validasi -->
-        <div id="customHint" class="mt-1 hidden text-sm font-medium text-red-500"></div>
+</div>
+</div>
 
-        <!-- Keypad angka -->
-        <div class="mt-4 grid grid-cols-4 gap-2">
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="1">1</button>
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="2">2</button>
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="3">3</button>
-          <button type="button" class="key flex items-center justify-center rounded-lg bg-gray-50 py-4 transition" data-key="back" aria-label="Hapus">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-700">
-              <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
-              <line x1="18" x2="12" y1="9" y2="15"></line>
-              <line x1="12" x2="18" y1="9" y2="15"></line>
-            </svg>
-          </button>
+<div class="recharge-section">
 
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="4">4</button>
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="5">5</button>
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="6">6</button>
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="000">000</button>
+<h2>Isi Ulang</h2>
 
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="7">7</button>
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="8">8</button>
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="9">9</button>
-          <button type="button" class="key rounded-lg bg-gray-50 py-4 text-lg font-medium text-gray-800 transition" data-key="0">0</button>
-        </div>
+<p>
+Hemat sekitar 25% berkat biaya layanan pihak ketiga yang lebih rendah.
+</p>
 
-        <!-- Special offer -->
-        <div class="mt-5 flex items-center justify-between text-sm">
-          <span class="text-gray-500">Special offer</span>
-          <span class="text-gray-400">Get 5% cashback ›</span>
-        </div>
+<div class="coin-options">
 
-        <!-- Total -->
-        <div class="mt-4 flex items-center justify-between">
-          <span class="text-xl font-bold">Total</span>
-          <span id="customTotal" class="text-xl font-bold">$0.00</span>
-        </div>
+<button class="coin-option" data-coins="30" data-price="4.900">
+<div class="top-row">
+<img src="https://tikpopular.com/wp-content/coins.png">
+<span>30</span>
+</div>
+<p>Rp 4.900</p>
+</button>
 
-        <!-- Tombol proses: langsung ke pembayaran -->
-        <button type="button" id="modalConfirm" disabled
-          class="mt-4 h-14 w-full rounded-xl bg-rose-500 text-lg font-bold tracking-wide text-white transition hover:bg-rose-600 active:scale-[.98] disabled:bg-rose-300">
-          PROCESS
-        </button>
+<button class="coin-option" data-coins="350" data-price="57.500">
+<div class="top-row">
+<img src="https://tikpopular.com/wp-content/coins.png">
+<span>350</span>
+</div>
+<p>Rp 57.500</p>
+</button>
 
-      </div>
-    </div>
-  </div>
+<button class="coin-option" data-coins="700" data-price="114.500">
+<div class="top-row">
+<img src="https://tikpopular.com/wp-content/coins.png">
+<span>700</span>
+</div>
+<p>Rp 114.500</p>
+</button>
 
-  <!-- ================= POPUP PEMBAYARAN (Loading → Sukses) ================= -->
-  <div id="payModal" class="modal-hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="modal-backdrop absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+<button class="coin-option" data-coins="1400" data-price="229.000">
+<div class="top-row">
+<img src="https://tikpopular.com/wp-content/coins.png">
+<span>1.400</span>
+</div>
+<p>Rp 229.000</p>
+</button>
 
-    <div class="modal-box no-scrollbar relative max-h-[92vh] w-full max-w-sm overflow-y-auto rounded-2xl bg-white p-8 shadow-2xl">
+<button class="coin-option" data-coins="3500" data-price="572.500">
+<div class="top-row">
+<img src="https://tikpopular.com/wp-content/coins.png">
+<span>3.500</span>
+</div>
+<p>Rp 572.500</p>
+</button>
 
-      <!-- ===== LANGKAH 1: Memproses ===== -->
-      <div id="payProcessStep" class="flex flex-col items-center py-8">
-        <div class="h-14 w-14 animate-spin rounded-full border-4 border-pink-200 border-t-pink-500"></div>
-        <p class="mt-5 font-semibold text-gray-700">Processing payment…</p>
-        <p class="mt-1 text-sm text-gray-400">Please wait a moment</p>
-      </div>
+<button class="coin-option custom-btn" id="customBtn">
+Khusus
+</button>
 
-      <!-- ===== LANGKAH 2: Sukses ===== -->
-      <div id="paySuccessStep" class="hidden flex-col items-center py-2 text-center">
+</div>
 
-        <!-- Bulatan hijau statis + ceklis putih tergambar dari kiri berulang -->
-        <div class="icon-success flex h-20 w-20 items-center justify-center rounded-full bg-green-500">
-          <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 24 24" fill="none"
-               stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-            <path class="check-path" d="M4 12 9 17L20 6"></path>
-          </svg>
-        </div>
+<div class="card">
+<img src="https://img.icons8.com/ios-filled/50/000000/handshake.png">
+<div>
+<h4>Undang & Dapat Hadiah</h4>
+<p>Cek fitur terbaru ini!</p>
+</div>
+</div>
 
-        <!-- Keterangan sukses -->
-        <div class="success-text">
-          <h3 class="mt-4 text-xl font-bold text-green-600">Payment Successful!</h3>
-          <p class="mt-1 text-sm text-gray-500"></p>
-        </div>
+<div class="card">
+<img src="https://img.icons8.com/?size=100&id=iCwcOoy8tOGw&format=png&color=000000">
+<div>
+<p>Tambahkan halaman ini ke layar utama HP untuk akses sekali klik.</p>
+</div>
+</div>
 
-        <!-- Detail transaksi (nama + centang biru jika verified) -->
-        <div class="success-detail mt-4 w-full rounded-xl bg-gray-50 p-4 text-sm">
-          <div class="flex items-center justify-between">
-            <span class="text-gray-500">Account</span>
-            <span class="flex items-center gap-1.5 font-semibold">
-              <img id="successAvatar" alt="" class="h-6 w-6 rounded-full object-cover" />
-              <span id="successName">User</span>
-              <svg id="successBadge" class="hidden shrink-0" width="14" height="14" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" fill="#20D5EC"/>
-                <path d="M7.5 12.2l3 3 6-6" stroke="#fff" stroke-width="2" fill="none"
-                      stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </div>
-          <div class="mt-1 flex justify-between">
-            <span class="text-gray-500">Coins</span>
-            <span id="successCoins" class="font-semibold">30 coins</span>
-          </div>
-        </div>
+<div class="tiktok-brand">
+<img src="https://img.icons8.com/ios-filled/50/000000/tiktok.png">
+TikTok
+</div>
 
-        <!-- Tombol NEXT: kembali ke tampilan utama (fresh, tanpa reload) -->
-        <button type="button" id="successNext"
-          class="success-detail mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-pink-500 font-semibold text-white transition hover:bg-pink-600 active:scale-95">
-          NEXT
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>
-          </svg>
-        </button>
+<div class="payment-logos">
 
-      </div>
+<img src="https://img.icons8.com/color/48/000000/visa.png">
 
-    </div>
-  </div>
+<img src="https://img.icons8.com/color/48/000000/mastercard.png">
 
-  <script>
-    // ================= KONSTANTA =================
-    const RATE      = 0.01426;   // harga per koin Custom (USD)
-    const MIN_COINS = 30;         // minimal Custom
-    const MAX_COINS = 2500000;    // maksimal Custom (2.500.000)
+<img src="https://img.icons8.com/color/48/000000/paypal.png">
 
-    // ===== API TikWM — endpoint ringan /api/user/info/ (cepat) =====
-    const TIKWM_INFO     = 'https://www.tikwm.com/api/user/info/';
-    const DIRECT_TIMEOUT = 3500;
-    const PROXY_TIMEOUT  = 4500;
+<img src="https://img.icons8.com/?size=100&id=77188&format=png&color=000000">
 
-    const AVATAR_FALLBACK = 'data:image/svg+xml,' + encodeURIComponent(
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d1d5db"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7z"/></svg>'
+</div>
+
+</div>
+</div>
+
+<footer>
+
+<div class="special-offer">
+<span>Penawaran khusus</span>
+<span>Dapat cashback 5% &gt;</span>
+</div>
+
+<button class="buy-button" id="buyButton">
+Beli Rp 4.900
+</button>
+
+</footer>
+
+</div>
+
+
+<!-- CUSTOM -->
+
+<div class="overlay" id="customModal">
+
+<div class="modal-content-bottom">
+
+<header>
+<button class="back-btn" id="modalBackBtn">←</button>
+<h2 style="margin-left:30px;">Khusus</h2>
+</header>
+
+<div class="coin-input-box">
+<img src="https://tikpopular.com/wp-content/coins.png">
+<input id="coinAmountInput" value="0" readonly>
+</div>
+
+<p class="coin-hint">30 – 2.500.000</p>
+
+<p id="usdAmountDisplay">Rp 0</p>
+
+<div class="keypad" id="keypad">
+
+<button>1</button>
+<button>2</button>
+<button>3</button>
+<button>⌫</button>
+
+<button>4</button>
+<button>5</button>
+<button>6</button>
+<button>000</button>
+
+<button>7</button>
+<button>8</button>
+<button>9</button>
+<button>0</button>
+
+</div>
+
+<div class="custom-modal-offer">
+<span>Penawaran khusus</span>
+<span>Dapat cashback 5% &gt;</span>
+</div>
+
+<div class="custom-total-row">
+<span>Total</span>
+<span id="customTotalAmount">Rp 0</span>
+</div>
+
+<button class="recharge-btn" id="rechargeBtn">
+Isi Ulang
+</button>
+
+</div>
+</div>
+
+
+<!-- ORDER -->
+
+<div class="overlay" id="orderModal">
+
+<div class="modal">
+
+<header>
+<button class="back-btn" id="summaryBackBtn">←</button>
+<h2>Ringkasan Pesanan</h2>
+<div class="help-icon">?</div>
+</header>
+
+<div class="secure-payment">
+🔒 Pembayaran Aman
+</div>
+
+<div class="order-details">
+
+<div class="detail-row">
+<span>Akun</span>
+<span id="accountName"></span>
+</div>
+
+<div class="detail-row">
+<span id="summaryCoins"></span>
+<span id="summaryPrice"></span>
+</div>
+
+</div>
+
+<div class="payment-method-section">
+
+<h4>Metode Pembayaran</h4>
+
+<div class="payment-option selected" data-method="Ovo">
+
+<svg width="28" height="28" viewBox="0 0 48 48">
+<rect width="48" height="48" rx="10" fill="#4C3494"/>
+<text x="24" y="31" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold" font-family="Arial">OVO</text>
+</svg>
+
+<span>Ovo</span>
+<div class="dot"></div>
+
+</div>
+
+<div class="payment-option" data-method="Dana">
+
+<svg width="28" height="28" viewBox="0 0 48 48">
+<rect width="48" height="48" rx="10" fill="#108EE9"/>
+<text x="24" y="31" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold" font-family="Arial">DANA</text>
+</svg>
+
+<span>Dana</span>
+<div class="dot"></div>
+
+</div>
+
+<p class="policy-text">
+Pastikan pembayaran dilakukan melalui metode pembayaran resmi.
+Status transaksi akan menunggu verifikasi pembayaran.
+</p>
+
+</div>
+
+<div class="total-row">
+<span>Total</span>
+<span id="summaryTotal"></span>
+</div>
+
+<button class="pay-btn" id="payNowBtn">
+Lanjutkan Pembayaran
+</button>
+
+</div>
+</div>
+
+
+<!-- PROCESSING -->
+
+<div class="overlay" id="loaderModal">
+
+<div class="loader-container">
+
+<div class="tiktok-loader">
+<div class="dot red"></div>
+<div class="dot cyan"></div>
+</div>
+
+<p id="processingMessage">
+Menyiapkan pembayaran...
+</p>
+
+<p id="processingSubMessage">
+Silakan tunggu.
+</p>
+
+<p id="countdownTimer">
+00:03
+</p>
+
+</div>
+</div>
+
+
+<!-- PAYMENT STATUS -->
+
+<div class="overlay" id="successModal">
+
+<div class="success-container">
+
+<div class="success-icon">
+✓
+</div>
+
+<h1>Pembayaran Berhasil</h1>
+
+<div class="success-account-card">
+
+<div class="success-account-head">
+
+<img id="successAvatar" class="success-account-avatar">
+
+<div>
+
+<div id="successAccountName" class="success-account-name">
+Tamu
+</div>
+
+<div id="successAccountUsername" class="success-account-username">
+@tamu
+</div>
+
+</div>
+
+</div>
+
+<div class="success-account-stats">
+
+<div class="success-account-stat">
+<b id="successFollowing">-</b>
+<span>MENGIKUTI</span>
+</div>
+
+<div class="success-account-stat">
+<b id="successFollowers">-</b>
+<span>PENGIKUT</span>
+</div>
+
+<div class="success-account-stat">
+<b id="successLikes">-</b>
+<span>SUKA</span>
+</div>
+
+</div>
+
+</div>
+
+<button class="go-back-btn" id="goBackBtn">
+KEMBALI
+</button>
+
+</div>
+</div>
+
+
+<!-- HISTORY -->
+
+<div class="overlay" id="historyModal">
+
+<div class="modal">
+
+<header>
+
+<button class="back-btn" id="historyBackBtn">
+←
+</button>
+
+<h2>Riwayat Transaksi</h2>
+
+</header>
+
+<div class="history-list" id="historyList">
+
+<div class="history-empty">
+Belum ada transaksi.
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<script>
+/* =========================
+   GIFT SLIDESHOW
+========================= */
+
+(function(){
+    const slides=document.querySelectorAll(".gift-slide");
+    let current=0;
+
+    function nextSlide(){
+        const prev=slides[current];
+        prev.classList.remove("active");
+        prev.classList.add("exit");
+
+        current=(current+1)%slides.length;
+
+        const next=slides[current];
+        next.classList.remove("exit");
+        next.classList.add("active");
+
+        setTimeout(()=>{
+            prev.classList.remove("exit");
+        },500);
+    }
+
+    setInterval(nextSlide,6000);
+})();
+
+
+/* =========================
+   TARGET DETECTION
+========================= */
+
+const input=document.getElementById("targetUsernameInput");
+const spinner=document.getElementById("topTargetSpinner");
+const statusBox=document.getElementById("targetStatus");
+const card=document.getElementById("targetCard");
+
+let detectedTarget=null;
+let targetTimer=null;
+let requestId=0;
+const cache={};
+
+function formatRupiah(value){
+    return "Rp "+Number(value).toLocaleString("id-ID");
+}
+
+function statNumber(value){
+    if(value===null||value===undefined||value==="")return "-";
+
+    const n=Number(String(value).replace(/,/g,""));
+
+    if(!Number.isFinite(n))return String(value);
+
+    if(n>=1000000000)return (n/1000000000).toFixed(1).replace(".0","")+"B";
+    if(n>=1000000)return (n/1000000).toFixed(1).replace(".0","")+"M";
+    if(n>=1000)return (n/1000).toFixed(1).replace(".0","")+"K";
+
+    return n.toLocaleString("id-ID");
+}
+
+function pick(obj,keys,fallback=""){
+    for(const key of keys){
+        let value=obj;
+
+        for(const part of key.split(".")){
+            value=value?.[part];
+        }
+
+        if(value!==undefined&&value!==null&&value!==""){
+            return value;
+        }
+    }
+
+    return fallback;
+}
+
+function verifiedBadgeSVG(size=16){
+    return `
+    <span class="tiktok-verified-badge">
+    <svg width="${size}" height="${size}" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#20D5EC"/>
+    <path d="M7.5 12.2l3 3 6-6"
+    stroke="#fff"
+    stroke-width="2"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+    </svg>
+    </span>`;
+}
+
+function extractUser(raw){
+
+    if(!raw||typeof raw!=="object"){
+        throw new Error("Respons API kosong");
+    }
+
+    if(raw.code!==undefined && Number(raw.code)!==0){
+        throw new Error(raw.msg||"API error");
+    }
+
+    const root=raw.data||raw;
+    const info=root.userInfo||root.user_info||{};
+    const user=info.user||root.user||info||root;
+    const stats=info.stats||root.stats||{};
+
+    const username=String(
+        pick(user,
+        ["uniqueId","unique_id","username"],
+        "")
+    ).replace(/^@/,"").trim();
+
+    if(!username){
+        throw new Error("Username tidak ditemukan");
+    }
+
+    return {
+        username,
+        name:String(
+            pick(user,["nickname","name","display_name"],username)
+        ),
+        avatar:String(
+            pick(user,
+            ["avatarLarger","avatarMedium","avatarThumb","avatar","avatar_url"],
+            "")
+        ),
+        followers:pick(
+            stats,
+            ["followerCount","follower_count","followers"],
+            pick(user,["followerCount","followers"],0)
+        ),
+        following:pick(
+            stats,
+            ["followingCount","following_count","following"],
+            pick(user,["followingCount","following"],0)
+        ),
+        likes:pick(
+            stats,
+            ["heartCount","heart_count","totalFavorited","total_favorited"],
+            pick(user,["heartCount","totalFavorited"],0)
+        ),
+        bio:String(
+            pick(user,["signature","bio","desc"],"")
+        ),
+        verified:Boolean(
+            pick(user,["verified","isVerified","is_verified"],false)
+        )
+    };
+}
+
+async function requestTikwmUser(username){
+
+    const response=await fetch(
+        "https://www.tikwm.com/api/user/info/",
+        {
+            method:"POST",
+            cache:"no-store",
+            headers:{
+                "Content-Type":
+                "application/x-www-form-urlencoded;charset=UTF-8",
+                "Accept":"application/json"
+            },
+            body:
+            "unique_id="+encodeURIComponent(username)
+        }
     );
 
-    // ================= ELEMEN =================
-    const options  = document.querySelectorAll('.coin-option');
-    const payBtn   = document.getElementById('payBtn');
-    const payText  = document.getElementById('payText');
-    const username = document.getElementById('username');
-
-    // Deteksi akun TikTok
-    const inputSpinner = document.getElementById('inputSpinner');
-    const userStatus   = document.getElementById('userStatus');
-    const userPreview  = document.getElementById('userPreview');
-    const userAvatar   = document.getElementById('userAvatar');
-    const userNickname = document.getElementById('userNickname');
-    const userBadge    = document.getElementById('userVerifiedBadge');
-    const userError    = document.getElementById('userError');
-
-    // Custom
-    const customCard    = document.getElementById('customCard');
-    const customPrice   = document.getElementById('customCardPrice');
-    const customModal   = document.getElementById('customModal');
-    const customDisplay = document.getElementById('customDisplay');
-    const customPreview = document.getElementById('customPricePreview');
-    const customTotal   = document.getElementById('customTotal');
-    const customHint    = document.getElementById('customHint');
-    const modalConfirm  = document.getElementById('modalConfirm');
-
-    // Pembayaran
-    const payModal      = document.getElementById('payModal');
-    const payProcess    = document.getElementById('payProcessStep');
-    const paySuccess    = document.getElementById('paySuccessStep');
-    const successCoins  = document.getElementById('successCoins');
-    const successName   = document.getElementById('successName');
-    const successBadge  = document.getElementById('successBadge');
-    const successAvatar = document.getElementById('successAvatar');
-
-    // ================= STATE =================
-    let selected     = null;
-    let isCustom     = false;
-    let customSet    = 0;
-    let keypadValue  = '0';
-    let userState    = 'empty';   // 'empty' | 'checking' | 'found' | 'notfound' | 'error'
-    let verifiedUser = null;      // { username, name, avatar, verified }
-    let lastChecked  = '';
-    let debounceTimer = null;
-    let checkSeq = 0;
-
-    // Cache: username yang sudah dicek tidak dicek ulang
-    const userCache = new Map();
-
-    const formatUSD = n => '$' + n.toFixed(2);
-
-    // ================= UTIL API =================
-    function timeoutSignal(ms) {
-      const ctrl = new AbortController();
-      setTimeout(() => ctrl.abort(), ms);
-      return ctrl.signal;
+    if(!response.ok){
+        throw new Error("HTTP "+response.status);
     }
 
-    function pick(obj, keys, fb) {
-      for (const k of keys) {
-        let v = obj;
-        for (const p of k.split('.')) v = v?.[p];
-        if (v !== undefined && v !== null && v !== '') return v;
-      }
-      return fb;
+    const text=await response.text();
+
+    let json;
+
+    try{
+        json=JSON.parse(text);
+    }catch{
+        throw new Error("Respons API bukan JSON");
     }
 
-    // Error "jawaban definitif" dari API (bukan masalah jaringan)
-    class ApiAnswer extends Error {
-      constructor(msg, isLimit) { super(msg); this.isAnswer = true; this.isLimit = isLimit; }
-    }
+    return extractUser(json);
+}
 
-    // Ekstrak data user, TERMASUK status verified (centang biru)
-    function extractUser(raw) {
-      if (!raw || typeof raw !== 'object') throw new Error('API response empty');
-      if (raw.code !== undefined && Number(raw.code) !== 0) {
-        const msg = raw.msg || 'API error';
-        throw new ApiAnswer(msg, /limit/i.test(msg));
-      }
-      const root  = raw.data || raw;
-      const info  = root.userInfo || root.user_info || {};
-      const user  = info.user || root.user || info || root;
-      const uname = String(pick(user, ['uniqueId', 'unique_id', 'username'], '')).replace(/^@/, '').trim();
-      if (!uname) throw new ApiAnswer('Username not found', false);
-      return {
-        username: uname,
-        name    : String(pick(user, ['nickname', 'name', 'display_name'], uname)),
-        avatar  : String(pick(user, ['avatarLarger', 'avatarMedium', 'avatarThumb', 'avatar', 'avatar_url'], '')),
-        verified: Boolean(pick(user, ['verified', 'isVerified', 'is_verified'], false))
-      };
-    }
+function normalize(value){
 
-    // Jalur 1: POST langsung ke tikwm (paling cepat)
-    async function attemptDirectPost(uname) {
-      const res = await fetch(TIKWM_INFO, {
-        method: 'POST',
-        cache: 'no-store',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-          'Accept': 'application/json'
-        },
-        body: 'unique_id=' + encodeURIComponent(uname),
-        signal: timeoutSignal(DIRECT_TIMEOUT)
-      });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return extractUser(await res.json());
-    }
+    let v=String(value||"").trim();
 
-    // Jalur 2 & 3: lewat proxy GET (dibalakan/race — yang tercepat menang)
-    async function attemptProxy(makeUrl, uname) {
-      const url = TIKWM_INFO + '?unique_id=' + encodeURIComponent(uname);
-      const res = await fetch(makeUrl(url), { signal: timeoutSignal(PROXY_TIMEOUT) });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return extractUser(await res.json());
-    }
+    v=v.replace(
+        /^https?:\/\/(?:www\.|m\.)?tiktok\.com\//i,
+        ""
+    );
 
-    async function fetchTikwmUser(uname) {
-      let lastNetErr = null;
+    v=v.replace(/^@/,"");
+    v=v.split(/[/?#]/)[0];
 
-      try {
-        return await attemptDirectPost(uname);
-      } catch (err) {
-        if (err.isAnswer) throw err;
-        lastNetErr = err;
-      }
+    return v.trim();
+}
 
-      try {
-        return await Promise.any([
-          attemptProxy(u => 'https://api.allorigins.win/raw?url='      + encodeURIComponent(u), uname),
-          attemptProxy(u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u), uname)
-        ]);
-      } catch (err) {
-        if (err && err.isAnswer) throw err;
-        throw lastNetErr || err;
-      }
-    }
+function renderTarget(data){
 
-    // ================= DETEKSI AKUN TIKTOK =================
-    async function checkTikTokUser(name) {
-      const seq = ++checkSeq;
-      const clean = String(name || '').trim()
-        .replace(/^https?:\/\/(?:www\.|m\.)?tiktok\.com\//i, '')
-        .replace(/^@+/, '')
-        .split(/[/?#]/)[0].trim();
+    detectedTarget=data;
 
-      // Kosong -> reset tampilan
-      if (clean.length === 0) {
-        userState = 'empty';
-        verifiedUser = null;
-        lastChecked = '';
-        userPreview.classList.add('hidden');
-        userPreview.classList.remove('flex');
-        userError.classList.add('hidden');
-        userStatus.classList.add('hidden');
-        inputSpinner.classList.add('hidden');
-        refresh();
+    const avatar=document.getElementById("targetAvatar");
+
+    avatar.src=data.avatar||"";
+    avatar.onerror=()=>{
+        avatar.removeAttribute("src");
+    };
+
+    document.getElementById("targetName").innerHTML=
+        (data.name||data.username)+
+        (data.verified?verifiedBadgeSVG(16):"");
+
+    document.getElementById("targetUsername").textContent=
+        "@"+data.username;
+
+    document.getElementById("targetFollowing").textContent=
+        statNumber(data.following);
+
+    document.getElementById("targetFollowers").textContent=
+        statNumber(data.followers);
+
+    document.getElementById("targetLikes").textContent=
+        statNumber(data.likes);
+
+    document.getElementById("targetBio").textContent=
+        data.bio||"Tidak ada bio.";
+
+    card.classList.add("show");
+
+    statusBox.style.display="none";
+    spinner.classList.remove("show");
+}
+
+function resetTarget(){
+
+    detectedTarget=null;
+
+    input.value="";
+
+    card.classList.remove("show");
+
+    statusBox.textContent="";
+    statusBox.style.display="none";
+
+    spinner.classList.remove("show");
+
+    document.getElementById("targetName").textContent="-";
+    document.getElementById("targetUsername").textContent="-";
+    document.getElementById("targetFollowing").textContent="-";
+    document.getElementById("targetFollowers").textContent="-";
+    document.getElementById("targetLikes").textContent="-";
+    document.getElementById("targetBio").textContent="";
+}
+
+async function fetchTarget(username){
+
+    const id=++requestId;
+
+    if(cache[username]){
+        renderTarget(cache[username]);
         return;
-      }
+    }
 
-      // Sudah terverifikasi dengan nama sama -> tidak perlu cek ulang
-      if (clean === lastChecked && userState === 'found') { refresh(); return; }
+    try{
 
-      // Ada di cache -> tampil INSTAN tanpa request
-      const key = clean.toLowerCase();
-      if (userCache.has(key)) {
-        const cached = userCache.get(key);
-        if (cached) {
-          verifiedUser = cached;
-          userState = 'found';
-          lastChecked = clean;
-          showProfile(cached);
-        } else {
-          userState = 'notfound';
-          verifiedUser = null;
-          lastChecked = '';
-          showNotFound(clean);
-        }
-        inputSpinner.classList.add('hidden');
-        userStatus.classList.add('hidden');
-        refresh();
+        const data=await requestTikwmUser(username);
+
+        if(id!==requestId)return;
+
+        cache[username]=data;
+
+        renderTarget(data);
+
+    }catch(error){
+
+        if(id!==requestId)return;
+
+        spinner.classList.remove("show");
+        card.classList.remove("show");
+
+        statusBox.textContent=
+            error.message||"Gagal mengambil data akun";
+
+        statusBox.style.color="#d93025";
+        statusBox.style.display="block";
+    }
+}
+
+function detectTarget(){
+
+    const username=normalize(input.value);
+
+    if(!username){
+        resetTarget();
         return;
-      }
-
-      // Mulai mengecek
-      userState = 'checking';
-      inputSpinner.classList.remove('hidden');
-      userPreview.classList.add('hidden');
-      userPreview.classList.remove('flex');
-      userError.classList.add('hidden');
-      userStatus.classList.remove('hidden');
-      refresh();
-
-      try {
-        const info = await fetchTikwmUser(clean);
-        if (seq !== checkSeq) return;
-
-        verifiedUser = info;
-        userState = 'found';
-        lastChecked = clean;
-        userCache.set(key, info);
-        showProfile(info);
-      } catch (err) {
-        if (seq !== checkSeq) return;
-
-        if (err.isLimit) {
-          userState = 'error';
-          verifiedUser = null;
-          lastChecked = '';
-          userError.textContent = '⚠ TikTok server is busy (rate limit). Wait a moment, then press Enter to retry.';
-          userError.classList.remove('hidden');
-        } else if (err.isAnswer) {
-          userState = 'notfound';
-          verifiedUser = null;
-          lastChecked = '';
-          userCache.set(key, null);
-          showNotFound(clean);
-        } else {
-          userState = 'error';
-          verifiedUser = null;
-          lastChecked = '';
-          userError.textContent = '✗ Failed to verify username. Check your internet connection, then try again.';
-          userError.classList.remove('hidden');
-        }
-      }
-
-      inputSpinner.classList.add('hidden');
-      userStatus.classList.add('hidden');
-      refresh();
     }
 
-    function showProfile(info) {
-      userAvatar.src = info.avatar || AVATAR_FALLBACK;
-      userAvatar.onerror = () => { userAvatar.src = AVATAR_FALLBACK; };
-      userNickname.textContent = info.name || info.username;
+    clearTimeout(targetTimer);
 
-      // Centang biru TikTok: tampil HANYA jika akun benar-benar terverifikasi
-      userBadge.classList.toggle('hidden', !info.verified);
+    spinner.classList.add("show");
 
-      userPreview.classList.remove('hidden');
-      userPreview.classList.add('flex', 'fade-in');
-      userError.classList.add('hidden');
-      userStatus.classList.add('hidden');
-    }
+    statusBox.textContent="";
+    statusBox.style.color="#888";
+    statusBox.style.display="block";
 
-    function showNotFound(name) {
-      userError.textContent = '✗ TikTok user "' + name + '" not found. Check the username.';
-      userError.classList.remove('hidden');
-      userPreview.classList.add('hidden');
-      userPreview.classList.remove('flex');
-      userStatus.classList.add('hidden');
-    }
+    targetTimer=setTimeout(()=>{
+        fetchTarget(username);
+    },400);
+}
 
-    // ===== Pemicu deteksi: cepat =====
-    // Ketik -> cek 500ms setelah berhenti
-    username.addEventListener('input', () => {
-      clearTimeout(debounceTimer);
-      inputSpinner.classList.remove('hidden');
-      debounceTimer = setTimeout(() => checkTikTokUser(username.value), 500);
+input.addEventListener("input",detectTarget);
+
+input.addEventListener("paste",()=>{
+    setTimeout(detectTarget,50);
+});
+
+
+/* =========================
+   COINS
+========================= */
+
+const coinOptions=
+document.querySelectorAll(".coin-option:not(.custom-btn)");
+
+let selectedCoins=30;
+let selectedPrice=4900;
+
+document.querySelector(
+    '.coin-option[data-coins="30"]'
+).classList.add("selected");
+
+function setBuyText(){
+    document.getElementById("buyButton").textContent=
+        "Beli "+formatRupiah(selectedPrice);
+}
+
+coinOptions.forEach(option=>{
+
+    option.addEventListener("click",()=>{
+
+        coinOptions.forEach(o=>
+            o.classList.remove("selected")
+        );
+
+        option.classList.add("selected");
+
+        selectedCoins=
+            Number(option.dataset.coins);
+
+        selectedPrice=
+            Number(option.dataset.price);
+
+        setBuyText();
     });
+});
 
-    // Paste -> cek hampir instan (50ms)
-    username.addEventListener('paste', () => {
-      clearTimeout(debounceTimer);
-      inputSpinner.classList.remove('hidden');
-      debounceTimer = setTimeout(() => checkTikTokUser(username.value), 50);
-    });
 
-    // Enter -> cek langsung
-    username.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        clearTimeout(debounceTimer);
-        checkTikTokUser(username.value);
-      }
-    });
+/* =========================
+   CUSTOM
+========================= */
 
-    // ================= TOMBOL BAYAR (FOOTER) =================
-    function activatePink() {
-      payBtn.disabled = false;
-      payBtn.classList.remove('bg-gray-200', 'text-gray-400');
-      payBtn.classList.add('bg-pink-500', 'text-white', 'hover:bg-pink-600');
-    }
-    function resetGray() {
-      payBtn.disabled = true;
-      payBtn.classList.add('bg-gray-200', 'text-gray-400');
-      payBtn.classList.remove('bg-pink-500', 'text-white', 'hover:bg-pink-600');
-    }
-    function refresh() {
-      if (!selected) { resetGray(); payText.textContent = 'PROCESS'; return; }
+const customModal=
+document.getElementById("customModal");
 
-      switch (userState) {
-        case 'empty':
-          resetGray(); payText.textContent = 'PROCESS'; break;
-        case 'checking':
-          resetGray(); payText.textContent = 'Verifying username…'; break;
-        case 'notfound':
-          resetGray(); payText.textContent = 'TikTok user not found'; break;
-        case 'error':
-          resetGray(); payText.textContent = 'Failed to verify username'; break;
-        case 'found':
-          activatePink();
-          payText.textContent = isCustom
-            ? 'PROCESS ' + formatUSD(customSet * RATE)
-            : 'PROCESS ' + formatUSD(parseFloat(selected.dataset.price));
-          break;
-      }
+const customBtn=
+document.getElementById("customBtn");
+
+const coinInput=
+document.getElementById("coinAmountInput");
+
+const usdDisplay=
+document.getElementById("usdAmountDisplay");
+
+const totalDisplay=
+document.getElementById("customTotalAmount");
+
+const keypad=
+document.getElementById("keypad");
+
+let customRaw="";
+
+const MIN_COINS=30;
+const MAX_COINS=2500000;
+
+function formatCoins(value){
+
+    if(!value)return"0";
+
+    return Number(value).toLocaleString("id-ID");
+}
+
+function clampCustomValue(){
+
+    let num=Number(customRaw)||0;
+
+    if(num>MAX_COINS){
+        customRaw=String(MAX_COINS);
     }
 
-    // ================= PILIH PAKET BIASA =================
-    options.forEach(opt => {
-      if (opt === customCard) return;
-      opt.addEventListener('click', () => {
-        options.forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
-        selected = opt; isCustom = false; customSet = 0;
-        customPrice.innerHTML = '&nbsp;';
-        refresh();
-      });
-    });
+    coinInput.value=formatCoins(customRaw);
 
-    // ================= POPUP CUSTOM + KEYPAD =================
-    function renderKeypad() {
-      const coins = parseInt(keypadValue, 10) || 0;
-      const valid = coins >= MIN_COINS && coins <= MAX_COINS;
+    const coins=Number(customRaw)||0;
 
-      customDisplay.textContent = coins.toLocaleString('id-ID');
-      customPreview.textContent = formatUSD(coins * RATE);
-      customTotal.textContent   = formatUSD(coins * RATE);
+    const rupiah=coins*163.33;
 
-      if (coins > 0 && coins < MIN_COINS) {
-        customHint.textContent = 'Minimum ' + MIN_COINS.toLocaleString('id-ID') + ' coins';
-        customHint.classList.remove('hidden');
-      } else {
-        customHint.classList.add('hidden');
-      }
+    usdDisplay.textContent=formatRupiah(Math.round(rupiah));
 
-      modalConfirm.disabled = !valid;
-    }
+    totalDisplay.textContent=formatRupiah(Math.round(rupiah));
+}
 
-    function openCustom() {
-      keypadValue = '0';
-      renderKeypad();
-      customModal.classList.remove('modal-hidden');
-    }
-    function closeCustom() { customModal.classList.add('modal-hidden'); }
+customBtn.addEventListener("click",()=>{
 
-    customCard.addEventListener('click', openCustom);
-    document.getElementById('modalBack').addEventListener('click', closeCustom);
-    document.getElementById('modalBackdrop').addEventListener('click', closeCustom);
+    customRaw="";
+    coinInput.value="0";
+    usdDisplay.textContent="Rp 0";
+    totalDisplay.textContent="Rp 0";
 
-    document.querySelectorAll('.key').forEach(key => {
-      key.addEventListener('click', () => {
-        const k = key.dataset.key;
+    customModal.classList.add("show");
+});
 
-        if (k === 'back') {
-          keypadValue = keypadValue.length > 1 ? keypadValue.slice(0, -1) : '0';
-        } else {
-          if (keypadValue === '0') keypadValue = '';
-          keypadValue += k;
+document.getElementById("modalBackBtn")
+.addEventListener("click",()=>{
+    customModal.classList.remove("show");
+});
+
+keypad.addEventListener("click",event=>{
+
+    const button=event.target.closest("button");
+
+    if(!button)return;
+
+    const value=button.textContent.trim();
+
+    if(value==="⌫"){
+
+        customRaw=
+            customRaw.slice(0,-1);
+
+    }else if(value==="000"){
+
+        if(customRaw.length>0){
+            customRaw+="000";
         }
 
-        // Mentok otomatis di 2.500.000
-        if (parseInt(keypadValue, 10) > MAX_COINS) keypadValue = String(MAX_COINS);
+    }else if(/^\d$/.test(value)){
 
-        renderKeypad();
-      });
-    });
-
-    // ================= PEMBAYARAN: Loading → Sukses → NEXT =================
-    function getOrder() {
-      const coins = isCustom ? customSet : parseInt(selected.dataset.coins, 10);
-      const total = isCustom ? customSet * RATE : parseFloat(selected.dataset.price);
-      return {
-        coins,
-        total,
-        name    : verifiedUser ? (verifiedUser.name || verifiedUser.username) : username.value.trim(),
-        verified: verifiedUser ? verifiedUser.verified : false,
-        avatar  : verifiedUser ? verifiedUser.avatar : AVATAR_FALLBACK
-      };
-    }
-
-    // Dipakai oleh tombol "Recharge Now" DAN tombol "PROCESS" di Custom
-    function startPayment() {
-      if (!selected) return;
-      const o = getOrder();
-
-      // Isi data sukses (nama & foto dari API TikWM + centang biru jika verified)
-      successCoins.textContent = o.coins.toLocaleString('id-ID') + ' coins';
-      successName.textContent  = o.name;
-      successBadge.classList.toggle('hidden', !o.verified);
-      successAvatar.src        = o.avatar;
-      successAvatar.onerror    = () => { successAvatar.src = AVATAR_FALLBACK; };
-
-      // Tampilkan popup mulai dari LOADING
-      paySuccess.classList.add('hidden');
-      paySuccess.classList.remove('flex');
-      payProcess.classList.remove('hidden');
-      payProcess.classList.add('flex');
-      payModal.classList.remove('modal-hidden');
-
-      // Setelah 1.8 detik -> tampilkan SUKSES
-      setTimeout(() => {
-        payProcess.classList.add('hidden');
-        payProcess.classList.remove('flex');
-        paySuccess.classList.remove('hidden');
-        paySuccess.classList.add('flex');
-      }, 1800);
-    }
-
-    payBtn.addEventListener('click', () => {
-      if (payBtn.disabled) return;
-      startPayment();
-    });
-
-    // ===== PROCESS: langsung bayar (loading) tanpa lewat tombol Recharge Now =====
-    modalConfirm.addEventListener('click', () => {
-      const coins = parseInt(keypadValue, 10) || 0;
-      if (coins < MIN_COINS || coins > MAX_COINS) return;
-
-      // Terapkan pilihan custom
-      customSet = coins;
-      isCustom  = true;
-
-      options.forEach(o => o.classList.remove('selected'));
-      customCard.classList.add('selected');
-      selected = customCard;
-      customPrice.textContent = coins.toLocaleString('id-ID') + ' · ' + formatUSD(coins * RATE);
-
-      // Tutup popup Custom
-      closeCustom();
-
-      // Kalau username sudah terverifikasi -> LANGSUNG loading pembayaran
-      if (userState === 'found') {
-        refresh();
-        startPayment();
-      } else {
-        // Username belum terverifikasi: kembali ke utama, fokus ke input
-        refresh();
-        if (userState === 'empty' || userState === 'checking') {
-          username.focus();
+        if(customRaw.length<9){
+            customRaw+=value;
         }
-      }
-    });
-
-    // ================= NEXT: kembali ke tampilan utama (TANPA reload) =================
-    function resetAll() {
-      // Tutup popup pembayaran & reset langkahnya
-      payModal.classList.add('modal-hidden');
-      paySuccess.classList.add('hidden');
-      paySuccess.classList.remove('flex');
-      payProcess.classList.add('hidden');
-      payProcess.classList.remove('flex');
-
-      // Reset username & deteksi akun
-      username.value = '';
-      userState = 'empty';
-      verifiedUser = null;
-      lastChecked = '';
-      inputSpinner.classList.add('hidden');
-      userStatus.classList.add('hidden');
-      userError.classList.add('hidden');
-      userError.textContent = '';
-      userPreview.classList.add('hidden');
-      userPreview.classList.remove('flex');
-
-      // Reset pilihan paket koin
-      options.forEach(o => o.classList.remove('selected'));
-      selected = null;
-      isCustom = false;
-      customSet = 0;
-      customPrice.innerHTML = '&nbsp;';
-
-      // Reset keypad Custom
-      keypadValue = '0';
-      renderKeypad();
-
-      // Reset tombol bayar ke kondisi awal
-      refresh();
-
-      // Langsung fokus ke input username, siap transaksi baru
-      setTimeout(() => username.focus(), 250);
     }
 
-    document.getElementById('successNext').addEventListener('click', resetAll);
+    clampCustomValue();
+});
 
-    // Tutup popup custom dengan Escape
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeCustom();
+document.getElementById("rechargeBtn")
+.addEventListener("click",()=>{
+
+    const coins=Number(customRaw)||0;
+
+    if(coins<MIN_COINS){
+        alert("Jumlah koin minimal 30.");
+        return;
+    }
+
+    if(coins>MAX_COINS){
+        alert("Jumlah koin maksimal 2.500.000.");
+        return;
+    }
+
+    selectedCoins=coins;
+
+    selectedPrice=
+        Math.round(coins*163.33);
+
+    coinOptions.forEach(o=>
+        o.classList.remove("selected")
+    );
+
+    setBuyText();
+
+    customModal.classList.remove("show");
+});
+
+
+/* =========================
+   ORDER
+========================= */
+
+const orderModal=
+document.getElementById("orderModal");
+
+let selectedPaymentMethod="Ovo";
+
+const paymentOptions=
+document.querySelectorAll(".payment-option");
+
+document.getElementById("buyButton")
+.addEventListener("click",()=>{
+
+    if(!detectedTarget){
+
+        alert(
+            "Masukkan username target terlebih dahulu!"
+        );
+
+        return;
+    }
+
+    document.getElementById("accountName")
+        .textContent="@"+detectedTarget.username;
+
+    document.getElementById("summaryCoins")
+        .textContent=
+        selectedCoins.toLocaleString("id-ID")+
+        " Koin";
+
+    document.getElementById("summaryPrice")
+        .textContent=
+        formatRupiah(selectedPrice);
+
+    document.getElementById("summaryTotal")
+        .textContent=
+        formatRupiah(selectedPrice);
+
+    orderModal.classList.add("show");
+});
+
+document.getElementById("summaryBackBtn")
+.addEventListener("click",()=>{
+    orderModal.classList.remove("show");
+});
+
+paymentOptions.forEach(option=>{
+
+    option.addEventListener("click",()=>{
+
+        paymentOptions.forEach(o=>
+            o.classList.remove("selected")
+        );
+
+        option.classList.add("selected");
+
+        selectedPaymentMethod=
+            option.dataset.method;
+    });
+});
+
+
+/* =========================
+   PAYMENT STATUS
+========================= */
+
+const loader=
+document.getElementById("loaderModal");
+
+document.getElementById("payNowBtn")
+.addEventListener("click",()=>{
+
+    orderModal.classList.remove("show");
+
+    loader.classList.add("show");
+
+    let seconds=3;
+
+    document.getElementById("countdownTimer")
+        .textContent="00:03";
+
+    document.getElementById("processingMessage")
+        .textContent=
+        "Menyiapkan pembayaran...";
+
+    const timer=setInterval(()=>{
+
+        seconds--;
+
+        document.getElementById("countdownTimer")
+            .textContent=
+            "00:0"+seconds;
+
+        if(seconds<=0){
+
+            clearInterval(timer);
+
+            loader.classList.remove("show");
+
+            showPaymentPending();
+        }
+
+    },1000);
+});
+
+
+/* =========================
+   PAYMENT PENDING
+======================== */
+
+function showPaymentPending(){
+
+    if(!detectedTarget)return;
+
+    document.getElementById("successAvatar").src=
+        detectedTarget.avatar||"";
+
+    document.getElementById("successAccountName")
+        .innerHTML=
+        (detectedTarget.name||
+         detectedTarget.username)+
+        (detectedTarget.verified?
+         verifiedBadgeSVG(15):"");
+
+    document.getElementById("successAccountUsername")
+        .textContent=
+        "@"+detectedTarget.username;
+
+    document.getElementById("successFollowing")
+        .textContent=
+        statNumber(detectedTarget.following);
+
+    document.getElementById("successFollowers")
+        .textContent=
+        statNumber(detectedTarget.followers);
+
+    document.getElementById("successLikes")
+        .textContent=
+        statNumber(detectedTarget.likes);
+
+    saveTransaction();
+
+    document.getElementById("successModal")
+        .classList.add("show");
+}
+
+document.getElementById("goBackBtn")
+.addEventListener("click",()=>{
+
+    document.getElementById("successModal")
+        .classList.remove("show");
+
+    resetTarget();
+});
+
+
+/* =========================
+   HISTORY
+======================== */
+
+let transactionHistory=[];
+
+function saveTransaction(){
+
+    if(!detectedTarget)return;
+
+    transactionHistory.unshift({
+
+        username:detectedTarget.username,
+        name:detectedTarget.name,
+        avatar:detectedTarget.avatar,
+        followers:detectedTarget.followers,
+        following:detectedTarget.following,
+        likes:detectedTarget.likes,
+        verified:detectedTarget.verified
+
     });
 
-    renderKeypad();
-    refresh();
-  </script>
+    if(transactionHistory.length>50){
+        transactionHistory.pop();
+    }
+}
+
+function openHistory(){
+
+    const list=
+        document.getElementById("historyList");
+
+    list.innerHTML="";
+
+    if(!transactionHistory.length){
+
+        list.innerHTML=
+            '<div class="history-empty">'+
+            'Belum ada transaksi.'+
+            '</div>';
+
+    }else{
+
+        transactionHistory.forEach(tx=>{
+
+            const item=
+                document.createElement("div");
+
+            item.className="history-item";
+
+            item.innerHTML=`
+
+            <div class="history-account-top">
+
+                <img src="${tx.avatar||""}">
+
+                <div>
+
+                    <div class="history-account-name">
+                        ${tx.name||tx.username}
+                        ${tx.verified?
+                          verifiedBadgeSVG(14):""}
+                    </div>
+
+                    <div class="history-account-username">
+                        @${tx.username}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="history-account-stats">
+
+                <div class="history-account-stat">
+                    <b>${statNumber(tx.following)}</b>
+                    <span>MENGIKUTI</span>
+                </div>
+
+                <div class="history-account-stat">
+                    <b>${statNumber(tx.followers)}</b>
+                    <span>PENGIKUT</span>
+                </div>
+
+                <div class="history-account-stat">
+                    <b>${statNumber(tx.likes)}</b>
+                    <span>SUKA</span>
+                </div>
+
+            </div>
+
+            `;
+
+            list.appendChild(item);
+        });
+    }
+
+    document.getElementById("historyModal")
+        .classList.add("show");
+}
+
+document.getElementById("menuBtn")
+.addEventListener("click",event=>{
+
+    event.stopPropagation();
+
+    document.getElementById("menuDropdown")
+        .classList.toggle("show");
+});
+
+document.addEventListener("click",()=>{
+    document.getElementById("menuDropdown")
+        .classList.remove("show");
+});
+
+document.getElementById("menuRiwayat")
+.addEventListener("click",openHistory);
+
+document.getElementById("historyBackBtn")
+.addEventListener("click",()=>{
+    document.getElementById("historyModal")
+        .classList.remove("show");
+});
+
+document.getElementById("homeBackBtn")
+.addEventListener("click",resetTarget);
+
+setBuyText();
+
+</script>
+
 </body>
 </html>
